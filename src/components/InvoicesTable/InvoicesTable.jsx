@@ -4,7 +4,7 @@ import { handleApprove, handleRejectClick } from '../../modules/invoiceActions';
 
 import './InvoicesTable.css';
 
-function InvoicesTable({ invoices, removeInvoice, openRejectModal }) {
+function InvoicesTable({ invoices, removeInvoice, openRejectModal, openConfirmModal }) {
   return (
     <div className="table-page">
       <div className="table-container">
@@ -33,7 +33,8 @@ function InvoicesTable({ invoices, removeInvoice, openRejectModal }) {
                   <FontAwesomeIcon
                     icon={faCheck}
                     className="icon-approve"
-                    onClick={() => handleApprove(inv.id, removeInvoice)}
+                    onClick={() => handleApprove(inv.id, inv.numero, openConfirmModal)}
+                    cursor="pointer"
                   />
 
                   <FontAwesomeIcon

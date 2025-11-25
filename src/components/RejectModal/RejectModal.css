@@ -45,13 +45,6 @@
   border-radius: 6px;
 }
 
-.btn-confirm {
-  background: #d93636;
-  color: white;
-  padding: 8px 14px;
-  border-radius: 6px;
-}
-
 .btn-confirm:disabled {
   opacity: 0.5;
   cursor: not-allowed;

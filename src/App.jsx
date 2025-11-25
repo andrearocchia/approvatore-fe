@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Login from './components/Login/Login';
 import InvoicesTable from './components/InvoicesTable/InvoicesTable';
 import RejectModal from './components/RejectModal/RejectModal';
+import ConfirmModal from './components/ConfirmModal/ConfirmModal';
 
 import './App.css';
 
@@ -18,8 +19,11 @@ export default function App() {
     { id: 6, numero: 'FAT-006', data: '2025-01-10', cliente: 'Demo SRL', importo: 450.00 }
   ]);
 
-  // stato modale
+  // stato modale rifiuto
   const [modalInvoiceId, setModalInvoiceId] = useState(null);
+
+  // stato modale conferma
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, invoiceId: null, invoiceNumber: null });
 
   const handleLogin = (payload) => setUser(payload);
   const handleLogout = () => setUser(null);
@@ -40,6 +44,20 @@ export default function App() {
     console.log("Rifiutata fattura:", modalInvoiceId, "Motivo:", reason);
     removeInvoice(modalInvoiceId);
     closeRejectModal();
+  };
+
+  const openConfirmModal = (invoiceId, invoiceNumber) => {
+    setConfirmModal({ isOpen: true, invoiceId, invoiceNumber });
+  };
+
+  const closeConfirmModal = () => {
+    setConfirmModal({ isOpen: false, invoiceId: null, invoiceNumber: null });
+  };
+
+  const handleConfirmApprove = () => {
+    console.log("Approvata fattura:", confirmModal.invoiceId);
+    removeInvoice(confirmModal.invoiceId);
+    closeConfirmModal();
   };
 
   return (
@@ -64,6 +82,14 @@ export default function App() {
               invoices={invoices}
               removeInvoice={removeInvoice}
               openRejectModal={openRejectModal}
+              openConfirmModal={openConfirmModal}
+            />
+
+            <ConfirmModal
+              isOpen={confirmModal.isOpen}
+              onClose={closeConfirmModal}
+              onConfirm={handleConfirmApprove}
+              invoiceNumber={confirmModal.invoiceNumber}
             />
 
             <RejectModal
