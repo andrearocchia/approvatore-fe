@@ -14,7 +14,6 @@ function Login({ onLogin }) {
     <div className="login-page">
       <form className="login-container" onSubmit={handleSubmit}>
         <h2 className="login-title">Login</h2>
-        <p>Inserisci le tue credenziali per entrare</p>
         <label>Username</label>
         <input
           type="text"
