@@ -1,0 +1,35 @@
+.invoices-container {
+  padding: 16px;
+}
+
+.invoices-title {
+  margin-bottom: 12px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.invoices-table-wrapper {
+  overflow-x: auto;
+}
+
+.invoices-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.invoices-table th,
+.invoices-table td {
+  padding: 10px;
+  font-size: 14px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.invoices-table th {
+  text-align: left;
+  font-weight: 600;
+}
+
+.text-right {
+  text-align: right;
+}
