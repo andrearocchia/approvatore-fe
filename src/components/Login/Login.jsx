@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { loginRequest } from '../../api/apiClient';
 import './Login.css';
 
 function Login({ onLogin }) {
@@ -8,26 +9,26 @@ function Login({ onLogin }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await fetch("http://localhost:3000/users/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
+    try {
+      const data = await loginRequest(username, password);
 
-    const data = await response.json();
+      // Salvare token (lo useremo in step 2)
+      localStorage.setItem("token", data.access_token);
 
-    if (!data.success) {
+      // Non abbiamo il “user” nel token, ma lo recupereremo dallo decode JWT in step 2
+      onLogin({ username });
+
+    } catch (error) {
       alert("Credenziali non valide");
-      return;
+      console.error(error);
     }
-
-    onLogin(data.user);
   };
 
   return (
     <div className="login-page">
       <form className="login-container" onSubmit={handleSubmit}>
         <h2 className="login-title">Login</h2>
+
         <label>Username</label>
         <input
           type="text"

@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
+import { registerUnauthorizedCallback } from "./api/apiClient";
+
 import Login from './components/Login/Login';
 import InvoicesTable from './components/InvoicesTable/InvoicesTable';
 import RejectModal from './components/RejectModal/RejectModal';
@@ -9,7 +12,38 @@ import './App.css';
 export default function App() {
   const [user, setUser] = useState(null);
 
-  // stato fatture fittizie
+  // ============================
+  // CARICA TOKEN ALL’AVVIO
+  // ============================
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+
+        setUser({
+          username: decoded.username,
+          role: decoded.role,
+          token,
+        });
+      } catch (err) {
+        console.error("Token non valido. Logout eseguito.");
+        localStorage.removeItem("token");
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    registerUnauthorizedCallback(() => {
+      console.warn("Token scaduto o non valido. Logout automatico.");
+      handleLogout();
+    });
+  }, []);
+
+  // ============================
+  // FATTURE FITTIZIE
+  // ============================
   const [invoices, setInvoices] = useState([
     { id: 1, external_ID: 10541, numero: 'FAT-001', data: '2025-01-01', stato: 'in_attesa', cliente: 'Mario Rossi', importo: 120.50, iva: '10' },
     { id: 2, external_ID: 20541, numero: 'FAT-002', data: '2025-01-03', stato: 'in_attesa', cliente: 'ACME S.p.A.', importo: 980.00, iva: '10' },
@@ -19,15 +53,42 @@ export default function App() {
     { id: 6, external_ID: 60565, numero: 'FAT-006', data: '2025-01-10', stato: 'in_attesa', cliente: 'Demo SRL', importo: 450.00, iva: '10' }
   ]);
 
-  // stato modale rifiuto
+  // ============================
+  // MODALI
+  // ============================
   const [modalInvoiceId, setModalInvoiceId] = useState(null);
 
-  // stato modale conferma
-  const [confirmModal, setConfirmModal] = useState({ isOpen: false, invoiceId: null, invoiceNumber: null });
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    invoiceId: null,
+    invoiceNumber: null,
+  });
 
-  const handleLogin = (payload) => setUser(payload);
-  const handleLogout = () => setUser(null);
+  // ============================
+  // LOGIN (dopo token in localStorage)
+  // ============================
+  const handleLogin = () => {
+    const token = localStorage.getItem("token");
+    const decoded = jwtDecode(token);
 
+    setUser({
+      username: decoded.username,
+      role: decoded.role,
+      token,
+    });
+  };
+
+  // ============================
+  // LOGOUT
+  // ============================
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+  };
+
+  // ============================
+  // LOGICA FATTURE
+  // ============================
   const removeInvoice = (invoiceId) => {
     setInvoices(prev => prev.filter(inv => inv.id !== invoiceId));
   };
@@ -60,17 +121,20 @@ export default function App() {
     closeConfirmModal();
   };
 
+  // ============================
+  // RENDER
+  // ============================
   return (
     <div className="app-container">
       <header className="app-header">
-
         {user && (
           <div className="app-user">
             <span className="app-username">Ciao, {user.username}</span>
-            <button className="app-logout" onClick={handleLogout}>Logout</button>
+            <button className="app-logout" onClick={handleLogout}>
+              Logout
+            </button>
           </div>
         )}
-
       </header>
 
       <main>
