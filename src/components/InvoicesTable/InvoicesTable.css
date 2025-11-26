@@ -1,70 +1,82 @@
-/* Pagina full width/height */
 .table-page {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
+  padding: 20px;
 }
 
-/* Contenitore centrato e responsive */
 .table-container {
-  width: 100%;
-  background: #fff;
-  padding: 1rem;
-  border-radius: 0.8rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  overflow-x: auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
 }
 
 .table-title {
-  text-align: center;
-  margin-bottom: 1rem;
-  font-size: 22px;
+  margin: 0 0 20px 0;
+  font-size: 1.5em;
+  color: #333;
 }
 
-/* Tabella mobile-first */
 .invoice-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 0.95em;
 }
 
-.invoice-table th,
+.invoice-table thead {
+  background: #f0f0f0;
+}
+
+.invoice-table th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #ddd;
+}
+
 .invoice-table td {
-  padding: 1rem;
-  text-align: center;
-  border-bottom: 1px solid #ddd;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  color: #555;
 }
 
-.invoice-table tbody tr:nth-child(even) {
-  background: #fafafa;
+.invoice-table tbody tr:hover {
+  background: #f9f9f9;
 }
 
-.actions-cell svg {
-  margin-right: 1rem;
+.actions-cell {
+  display: flex;
+  gap: 12px;
+  align-items: center;
 }
 
-.actions-cell svg:last-child {
-  margin-right: 0;
+.icon-info,
+.icon-approve,
+.icon-reject {
+  cursor: pointer;
+  font-size: 1.1em;
+  transition: color 0.2s ease;
+}
+
+.icon-info {
+  color: #0066cc;
+}
+
+.icon-info:hover {
+  color: #0052a3;
 }
 
 .icon-approve {
-  color: #0db30d;
-  cursor: pointer;
-  font-size: 18px;
+  color: #28a745;
 }
 
 .icon-approve:hover {
-  color: #0a8c0a;
+  color: #218838;
 }
 
 .icon-reject {
-  color: #d93636;
-  cursor: pointer;
-  font-size: 18px;
+  color: #dc3545;
 }
 
 .icon-reject:hover {
-  color: #c43636;
+  color: #c82333;
 }
