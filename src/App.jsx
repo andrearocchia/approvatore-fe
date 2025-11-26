@@ -6,14 +6,16 @@ import Login from './components/Login/Login';
 import InvoicesTable from './components/InvoicesTable/InvoicesTable';
 import RejectModal from './components/RejectModal/RejectModal';
 import ConfirmModal from './components/ConfirmModal/ConfirmModal';
+import InfoModal from './components/InfoModal/InfoModal';
 
 import './App.css';
+import fakeInvoices from "./assets/fakeInvoices.json";
 
 export default function App() {
   const [user, setUser] = useState(null);
 
   // ============================
-  // CARICA TOKEN ALL’AVVIO
+  // CARICA TOKEN ALL'AVVIO
   // ============================
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -44,14 +46,8 @@ export default function App() {
   // ============================
   // FATTURE FITTIZIE
   // ============================
-  const [invoices, setInvoices] = useState([
-    { id: 1, external_ID: 10541, numero: 'FAT-001', data: '2025-01-01', stato: 'in_attesa', cliente: 'Mario Rossi', importo: 120.50, iva: '10' },
-    { id: 2, external_ID: 20541, numero: 'FAT-002', data: '2025-01-03', stato: 'in_attesa', cliente: 'ACME S.p.A.', importo: 980.00, iva: '10' },
-    { id: 3, external_ID: 30678, numero: 'FAT-003', data: '2025-01-10', stato: 'in_attesa', cliente: 'Demo SRL', importo: 450.00, iva: '10' },
-    { id: 4, external_ID: 40578, numero: 'FAT-004', data: '2025-01-01', stato: 'in_attesa', cliente: 'Mario Rossi', importo: 120.50, iva: '10' },
-    { id: 5, external_ID: 50559, numero: 'FAT-005', data: '2025-01-03', stato: 'in_attesa', cliente: 'ACME S.p.A.', importo: 980.00, iva: '10' },
-    { id: 6, external_ID: 60565, numero: 'FAT-006', data: '2025-01-10', stato: 'in_attesa', cliente: 'Demo SRL', importo: 450.00, iva: '10' }
-  ]);
+  const [invoices, setInvoices] = useState(fakeInvoices);
+
 
   // ============================
   // MODALI
@@ -62,6 +58,11 @@ export default function App() {
     isOpen: false,
     invoiceId: null,
     invoiceNumber: null,
+  });
+
+  const [infoModal, setInfoModal] = useState({
+    isOpen: false,
+    invoice: null,
   });
 
   // ============================
@@ -121,6 +122,15 @@ export default function App() {
     closeConfirmModal();
   };
 
+  const openInfoModal = (invoiceId) => {
+    const invoice = invoices.find(inv => inv.id === invoiceId);
+    setInfoModal({ isOpen: true, invoice });
+  };
+
+  const closeInfoModal = () => {
+    setInfoModal({ isOpen: false, invoice: null });
+  };
+
   // ============================
   // RENDER
   // ============================
@@ -147,6 +157,7 @@ export default function App() {
               removeInvoice={removeInvoice}
               openRejectModal={openRejectModal}
               openConfirmModal={openConfirmModal}
+              openInfoModal={openInfoModal}
             />
 
             <ConfirmModal
@@ -160,6 +171,12 @@ export default function App() {
               isOpen={modalInvoiceId !== null}
               onClose={closeRejectModal}
               onConfirm={confirmReject}
+            />
+
+            <InfoModal
+              isOpen={infoModal.isOpen}
+              onClose={closeInfoModal}
+              invoice={infoModal.invoice}
             />
           </>
         )}
