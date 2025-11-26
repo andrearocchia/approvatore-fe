@@ -10,54 +10,10 @@ Questo progetto è un sistema completo per la gestione di fatture che consente a
 - Approvare fatture con conferma
 - Rifiutare fatture con motivazione
 
-## Caratteristiche
-
-- ✅ Autenticazione utente
-- ✅ Visualizzazione tabella fatture
-- ✅ Approvazione fatture con modal di conferma
-- ✅ Rifiuto fatture con motivazione obbligatoria
-- ✅ Interfaccia moderna e responsive
-- ✅ Gestione dello stato con React Hooks
-
-## Stack Tecnologico
-
-| Tecnologia | Descrizione |
-|-----------|-----------|
-| **React** | Framework UI moderna |
-| **Vite** | Build tool veloce |
-| **FontAwesome** | Icone per le azioni |
-| **CSS3** | Styling personalizzato |
-
 ## Requisiti
 
 - Node.js 14+ 
 - npm o yarn
-
-## Installazione
-
-```bash
-# Clonare il repository
-git clone <repository-url>
-cd invoice-management
-
-# Installare le dipendenze
-npm install
-
-# Avviare il server di sviluppo
-npm run dev
-```
-
-Il server sarà disponibile su `http://localhost:5173`
-
-## Build per Produzione
-
-```bash
-# Compilare per produzione
-npm run build
-
-# Preview della build
-npm run preview
-```
 
 ## Struttura del Progetto
 
@@ -101,21 +57,11 @@ Per la documentazione dettagliata su componenti, flussi di lavoro e prossimi svi
 
 ## Prossimi Step
 
-- [ ] Integrazione API backend per autenticazione
-- [ ] Persistenza su database
-- [ ] Sistema di ruoli e permessi
-- [ ] Filtri e ricerca avanzata
-- [ ] Paginazione tabella
-- [ ] Export PDF fatture
-- [ ] Storico approvazioni
-- [ ] Notifiche email
-
-## Debugging
-
-I log console mostrano:
-- ID fattura approvata/rifiutata
-- Motivazione del rifiuto
-- Stato utente loggato
+- [ ] Integrazione con API backend per l'autenticazione
+- [ ] Integrazione API per approvazione/rifiuto fatture
+- [ ] Aggiunta filtri e ricerca nella tabella
+- [ ] Storico approvazioni/rifiuti
+- [ ] Logica di ruoli e permessi
 
 ## Note di Sviluppo
 

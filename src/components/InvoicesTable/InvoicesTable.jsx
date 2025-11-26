@@ -13,10 +13,13 @@ function InvoicesTable({ invoices, removeInvoice, openRejectModal, openConfirmMo
         <table className="invoice-table">
           <thead>
             <tr>
+              <th>external_ID</th>
               <th>Numero</th>
               <th>Data</th>
+              <th>Stato</th>
               <th>Cliente</th>
               <th>Importo</th>
+              <th>Iva</th>
               <th>Azione</th>
             </tr>
           </thead>
@@ -24,11 +27,13 @@ function InvoicesTable({ invoices, removeInvoice, openRejectModal, openConfirmMo
           <tbody>
             {invoices.map(inv => (
               <tr key={inv.id}>
+                <td>{inv.external_ID}</td>
                 <td>{inv.numero}</td>
                 <td>{inv.data}</td>
+                <td>{inv.stato}</td>
                 <td>{inv.cliente}</td>
                 <td>{inv.importo} €</td>
-
+                <td>{inv.iva}</td>
                 <td className="actions-cell">
                   <FontAwesomeIcon
                     icon={faCheck}

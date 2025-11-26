@@ -154,14 +154,10 @@ Attualmente il sistema utilizza dati fittizie (mock data):
 ## Prossimi Sviluppi
 
 - Integrazione con API backend per l'autenticazione
-- Persistenza dati su database
 - Integrazione API per approvazione/rifiuto fatture
 - Aggiunta filtri e ricerca nella tabella
-- Paginazione
-- Download/Stampa fatture
 - Storico approvazioni/rifiuti
-- Validazione credenziali lato server
-- Sistema di ruoli e permessi
+- Logica di ruoli e permessi
 
 ## Installazione e Avvio
 
@@ -174,9 +170,6 @@ npm run dev
 
 # Build per produzione
 npm run build
-
-# Preview build
-npm run preview
 ```
 
 ## Configurazione
@@ -187,9 +180,5 @@ Il progetto utilizza Vite con React. Assicurati di avere Node.js 14+ installato.
 
 - I dati delle fatture sono attualmente in stato locale (App.jsx)
 - I modal sono controllati da stato globale nel componente App
-- Le azioni di approvazione/rifiuto attualmente solo rimuovono la fattura
+- Le azioni di approvazione/rifiuto attualmente rimuovono solo la fattura lato client
 - I log console mostrano gli ID e i motivi delle azioni per debug
-
-## Contribuenti
-
-Progetto sviluppato per la gestione interna di fatture.

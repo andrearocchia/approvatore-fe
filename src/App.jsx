@@ -11,12 +11,12 @@ export default function App() {
 
   // stato fatture fittizie
   const [invoices, setInvoices] = useState([
-    { id: 1, numero: 'FAT-001', data: '2025-01-01', cliente: 'Mario Rossi', importo: 120.50 },
-    { id: 2, numero: 'FAT-002', data: '2025-01-03', cliente: 'ACME S.p.A.', importo: 980.00 },
-    { id: 3, numero: 'FAT-003', data: '2025-01-10', cliente: 'Demo SRL', importo: 450.00 },
-    { id: 4, numero: 'FAT-004', data: '2025-01-01', cliente: 'Mario Rossi', importo: 120.50 },
-    { id: 5, numero: 'FAT-005', data: '2025-01-03', cliente: 'ACME S.p.A.', importo: 980.00 },
-    { id: 6, numero: 'FAT-006', data: '2025-01-10', cliente: 'Demo SRL', importo: 450.00 }
+    { id: 1, external_ID: 10541, numero: 'FAT-001', data: '2025-01-01', stato: 'in_attesa', cliente: 'Mario Rossi', importo: 120.50, iva: '10' },
+    { id: 2, external_ID: 20541, numero: 'FAT-002', data: '2025-01-03', stato: 'in_attesa', cliente: 'ACME S.p.A.', importo: 980.00, iva: '10' },
+    { id: 3, external_ID: 30678, numero: 'FAT-003', data: '2025-01-10', stato: 'in_attesa', cliente: 'Demo SRL', importo: 450.00, iva: '10' },
+    { id: 4, external_ID: 40578, numero: 'FAT-004', data: '2025-01-01', stato: 'in_attesa', cliente: 'Mario Rossi', importo: 120.50, iva: '10' },
+    { id: 5, external_ID: 50559, numero: 'FAT-005', data: '2025-01-03', stato: 'in_attesa', cliente: 'ACME S.p.A.', importo: 980.00, iva: '10' },
+    { id: 6, external_ID: 60565, numero: 'FAT-006', data: '2025-01-10', stato: 'in_attesa', cliente: 'Demo SRL', importo: 450.00, iva: '10' }
   ]);
 
   // stato modale rifiuto
