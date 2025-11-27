@@ -25,7 +25,7 @@ export async function apiRequest(endpoint, method = "GET", body = null) {
     body: body ? JSON.stringify(body) : null,
   });
 
-  // 🟥 Token scaduto / non valido
+  // Token scaduto / non valido
   if (response.status === 401 || response.status === 403) {
     if (unauthorizedCallback) {
       unauthorizedCallback();

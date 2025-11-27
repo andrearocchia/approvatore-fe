@@ -7,12 +7,14 @@ import InvoicesTable from './components/InvoicesTable/InvoicesTable';
 import RejectModal from './components/RejectModal/RejectModal';
 import ConfirmModal from './components/ConfirmModal/ConfirmModal';
 import InfoModal from './components/InfoModal/InfoModal';
+import XmlUploader from './components/XmlUploader/XmlUploader';
 
 import './App.css';
-import fakeInvoices from "./assets/fakeInvoices.json";
 
 export default function App() {
   const [user, setUser] = useState(null);
+  const [invoices, setInvoices] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   // ============================
   // CARICA TOKEN ALL'AVVIO
@@ -44,10 +46,32 @@ export default function App() {
   }, []);
 
   // ============================
-  // FATTURE FITTIZIE
+  // CARICA FATTURE DA XML
   // ============================
-  const [invoices, setInvoices] = useState(fakeInvoices);
+  useEffect(() => {
+    if (user) {
+      loadInvoices();
+    }
+  }, [user]);
 
+  const loadInvoices = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('http://localhost:3000/invoices/list');
+      const result = await response.json();
+
+      if (result.success) {
+        setInvoices(result.invoices);
+        console.log('✅ Fatture caricate:', result.invoices.length);
+      } else {
+        console.error('Errore nel caricare le fatture');
+      }
+    } catch (error) {
+      console.error('Errore nel caricare le fatture:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // ============================
   // MODALI
@@ -152,13 +176,21 @@ export default function App() {
           <Login onLogin={handleLogin} />
         ) : (
           <>
-            <InvoicesTable
-              invoices={invoices}
-              removeInvoice={removeInvoice}
-              openRejectModal={openRejectModal}
-              openConfirmModal={openConfirmModal}
-              openInfoModal={openInfoModal}
-            />
+            <XmlUploader onInvoiceUploaded={loadInvoices} />
+  
+            {loading ? (
+              <div style={{ textAlign: 'center', padding: '2rem' }}>
+                Caricamento fatture...
+              </div>
+            ) : (
+              <InvoicesTable
+                invoices={invoices}
+                removeInvoice={removeInvoice}
+                openRejectModal={openRejectModal}
+                openConfirmModal={openConfirmModal}
+                openInfoModal={openInfoModal}
+              />
+            )}
 
             <ConfirmModal
               isOpen={confirmModal.isOpen}
