@@ -6,8 +6,6 @@ import Login from './components/Login/Login';
 import InvoicesTable from './components/InvoicesTable/InvoicesTable';
 import RejectModal from './components/RejectModal/RejectModal';
 import ConfirmModal from './components/ConfirmModal/ConfirmModal';
-import InfoModal from './components/InfoModal/InfoModal';
-import XmlUploader from './components/XmlUploader/XmlUploader';
 
 import './App.css';
 
@@ -63,6 +61,7 @@ export default function App() {
       if (result.success) {
         setInvoices(result.invoices);
         console.log('✅ Fatture caricate:', result.invoices.length);
+        console.log('✅ Fatture caricate:', result.invoices);
       } else {
         console.error('Errore nel caricare le fatture');
       }
@@ -76,18 +75,13 @@ export default function App() {
   // ============================
   // MODALI
   // ============================
-  const [modalInvoiceId, setModalInvoiceId] = useState(null);
-
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,
     invoiceId: null,
     invoiceNumber: null,
   });
 
-  const [infoModal, setInfoModal] = useState({
-    isOpen: false,
-    invoice: null,
-  });
+  const [modalInvoiceId, setModalInvoiceId] = useState(null);
 
   // ============================
   // LOGIN (dopo token in localStorage)
@@ -148,11 +142,26 @@ export default function App() {
 
   const openInfoModal = (invoiceId) => {
     const invoice = invoices.find(inv => inv.id === invoiceId);
-    setInfoModal({ isOpen: true, invoice });
-  };
+    if (!invoice) return;
 
-  const closeInfoModal = () => {
-    setInfoModal({ isOpen: false, invoice: null });
+    // Genera PDF lato server da dati già in memoria
+    fetch('http://localhost:3000/invoices/generate-pdf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(invoice),
+    })
+      .then(res => res.json())
+      .then(result => {
+        const binary = atob(result.pdf);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        const blob = new Blob([bytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+      })
+      .catch(err => console.error('Errore nella generazione PDF:', err));
   };
 
   // ============================
@@ -176,8 +185,6 @@ export default function App() {
           <Login onLogin={handleLogin} />
         ) : (
           <>
-            <XmlUploader onInvoiceUploaded={loadInvoices} />
-  
             {loading ? (
               <div style={{ textAlign: 'center', padding: '2rem' }}>
                 Caricamento fatture...
@@ -203,12 +210,6 @@ export default function App() {
               isOpen={modalInvoiceId !== null}
               onClose={closeRejectModal}
               onConfirm={confirmReject}
-            />
-
-            <InfoModal
-              isOpen={infoModal.isOpen}
-              onClose={closeInfoModal}
-              invoice={infoModal.invoice}
             />
           </>
         )}
