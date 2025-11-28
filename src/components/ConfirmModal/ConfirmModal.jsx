@@ -1,4 +1,4 @@
-import './ConfirmModal.css';
+import './ConfirmModal.scss';
 
 export default function ConfirmModal({ isOpen, onClose, onConfirm, invoiceNumber }) {
   if (!isOpen) return null;
@@ -17,7 +17,7 @@ export default function ConfirmModal({ isOpen, onClose, onConfirm, invoiceNumber
 
         <div className="modal-actions">
           <button className="btn-cancel" onClick={onClose}>Annulla</button>
-          <button className="btn-confirm" onClick={handleConfirm}>Conferma</button>
+          <button className="btn-confirm confirm-modal" onClick={handleConfirm}>Conferma</button>
         </div>
 
       </div>

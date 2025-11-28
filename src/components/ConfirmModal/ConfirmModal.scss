@@ -1,0 +1,24 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// Includo gli stili comuni dei modali definiti in styles/_modals.scss
+.modal-overlay {
+  @include modal-overlay;
+}
+
+.modal-content {
+  @include modal-content;
+}
+
+.btn-cancel,
+.btn-confirm {
+  @include button-base;
+
+  &.confirm-modal {
+    background: $color-success-light;
+
+    &:hover {
+      background: $color-success-light-hover;
+    }
+  }
+}
