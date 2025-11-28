@@ -42,8 +42,8 @@
 // Modal content
 @mixin modal-content {
   background: $color-bg-white;
-  padding: $spacing-xl;
+  padding: $padding-md;
   border-radius: $border-radius;
   max-width: 400px;
-  width: $width-90;
+  width: $width-70;
 }

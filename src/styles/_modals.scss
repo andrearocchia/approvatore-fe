@@ -5,7 +5,6 @@
 .modal-overlay {
   @include modal-overlay;
   background: $color-overlay;
-  padding: $padding;
 }
 
 .modal-content {
