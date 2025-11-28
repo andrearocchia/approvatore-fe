@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import { registerUnauthorizedCallback } from "./api/apiClient";
+import { registerUnauthorizedCallback, getInvoicesList, generateInvoicePDF } from "./api/apiClient";
 
 import Login from './components/Login/Login';
 import InvoicesTable from './components/InvoicesTable/InvoicesTable';
@@ -55,13 +55,11 @@ export default function App() {
   const loadInvoices = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/invoices/list');
-      const result = await response.json();
+      const result = await getInvoicesList();
 
       if (result.success) {
         setInvoices(result.invoices);
         console.log('✅ Fatture caricate:', result.invoices.length);
-        console.log('✅ Fatture caricate:', result.invoices);
       } else {
         console.error('Errore nel caricare le fatture');
       }
@@ -140,28 +138,24 @@ export default function App() {
     closeConfirmModal();
   };
 
-  const openInfoModal = (invoiceId) => {
+  const openInfoModal = async (invoiceId) => {
     const invoice = invoices.find(inv => inv.id === invoiceId);
     if (!invoice) return;
 
-    // Genera PDF lato server da dati già in memoria
-    fetch('http://localhost:3000/invoices/generate-pdf', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(invoice),
-    })
-      .then(res => res.json())
-      .then(result => {
-        const binary = atob(result.pdf);
-        const bytes = new Uint8Array(binary.length);
-        for (let i = 0; i < binary.length; i++) {
-          bytes[i] = binary.charCodeAt(i);
-        }
-        const blob = new Blob([bytes], { type: 'application/pdf' });
-        const url = URL.createObjectURL(blob);
-        window.open(url, '_blank');
-      })
-      .catch(err => console.error('Errore nella generazione PDF:', err));
+    try {
+      const result = await generateInvoicePDF(invoice);
+      
+      const binary = atob(result.pdf);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      const blob = new Blob([bytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+    } catch (err) {
+      console.error('Errore nella generazione PDF:', err);
+    }
   };
 
   // ============================

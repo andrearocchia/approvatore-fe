@@ -7,8 +7,11 @@ export function registerUnauthorizedCallback(fn) {
   unauthorizedCallback = fn;
 }
 
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 
+/**
+ * Funzione generica per chiamate API
+ */
 export async function apiRequest(endpoint, method = "GET", body = null) {
   const headers = {
     "Content-Type": "application/json",
@@ -41,11 +44,27 @@ export async function apiRequest(endpoint, method = "GET", body = null) {
   return await response.json();
 }
 
+// ============================
+// AUTH
+// ============================
 export function loginRequest(username, password) {
   return apiRequest("/auth/login", "POST", { username, password });
 }
 
-// Esempio API
+// ============================
+// INVOICES
+// ============================
+export function getInvoicesList() {
+  return apiRequest("/invoices/list");
+}
+
+export function generateInvoicePDF(invoiceData) {
+  return apiRequest("/invoices/generate-pdf", "POST", invoiceData);
+}
+
+// ============================
+// USERS (esempio per future chiamate)
+// ============================
 export function getUsers() {
   return apiRequest("/users");
 }
