@@ -1,9 +1,14 @@
 @use 'variables' as *;
 
-// Flexbox centering
-@mixin flex-center {
+// Flexbox
+@mixin flex {
   display: flex;
   justify-content: center;
+}
+
+// Flexbox centering
+@mixin flex-center {
+  @include flex;
   align-items: center;
 }
 
@@ -13,8 +18,8 @@
   border: none;
   border-radius: $border-radius;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: $font-medium;
+  font-weight: $font-weight;
   transition: all $transition-fast;
 
   &:disabled {
@@ -28,7 +33,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
+  width: $width-100;
   height: 100%;
   @include flex-center;
   z-index: 1000;
@@ -40,5 +45,5 @@
   padding: $spacing-xl;
   border-radius: $border-radius;
   max-width: 400px;
-  width: 90%;
+  width: $width-90;
 }

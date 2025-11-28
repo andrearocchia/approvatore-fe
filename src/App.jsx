@@ -7,7 +7,7 @@ import InvoicesTable from './components/InvoicesTable/InvoicesTable';
 import RejectModal from './components/RejectModal/RejectModal';
 import ConfirmModal from './components/ConfirmModal/ConfirmModal';
 
-import './App.css';
+import './App.scss';
 
 export default function App() {
   const [user, setUser] = useState(null);

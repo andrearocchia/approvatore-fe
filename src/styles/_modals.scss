@@ -15,14 +15,14 @@
 
   h3 {
     margin: 0 0 $spacing-md 0;
-    font-size: 1.25rem;
+    font-size: $font-title;
     color: $color-text-primary;
   }
 
   p {
     margin: 0 0 $spacing-lg 0;
     color: $color-text-muted;
-    font-size: 0.95rem;
+    font-size: $font-size;
   }
 
   .modal-actions {
@@ -44,7 +44,7 @@
 
     .btn-confirm {
       @include button-base;
-      color: white;
+      color: $color-bg-white;
     }
   }
 }
