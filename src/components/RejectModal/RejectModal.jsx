@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './RejectModal.css';
+import './RejectModal.scss';
 
 export default function RejectModal({ isOpen, onClose, onConfirm }) {
   const [reason, setReason] = useState('');
@@ -29,7 +29,7 @@ export default function RejectModal({ isOpen, onClose, onConfirm }) {
           <button className="btn-cancel" onClick={onClose}>Annulla</button>
 
           <button
-            className="btn-confirm"
+            className="btn-confirm reject-modal"
             disabled={!reason.trim()}
             onClick={handleSubmit}
           >
