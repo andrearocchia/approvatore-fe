@@ -1,0 +1,50 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+// Stili comuni per tutti i modali
+.modal-overlay {
+  @include modal-overlay;
+  background: $color-overlay;
+  padding: $padding;
+}
+
+.modal-content {
+  @include modal-content;
+  box-shadow: $shadow-md;
+  border-radius: $border-radius;
+
+  h3 {
+    margin: 0 0 $spacing-md 0;
+    font-size: 1.25rem;
+    color: $color-text-primary;
+  }
+
+  p {
+    margin: 0 0 $spacing-lg 0;
+    color: $color-text-muted;
+    font-size: 0.95rem;
+  }
+
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: $spacing-md;
+    gap: 0.8rem;
+
+    // Bottoni dei modali
+    .btn-cancel {
+      @include button-base;
+      background: $color-bg-cancel-light;
+      color: $color-text-primary;
+
+      &:hover {
+        background: $color-bg-cancel-light-hover;
+      }
+    }
+
+    .btn-confirm {
+      @include button-base;
+      color: white;
+    }
+  }
+}
