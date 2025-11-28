@@ -1,0 +1,87 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.table-page {
+  padding: $padding;
+
+  .table-container {
+    background: $color-bg-white;
+    border-radius: $border-radius;
+    box-shadow: $shadow-sm;
+    padding: $padding;
+
+    .table-title {
+      @include flex-center;
+      font-size: $font-title;
+      color: $color-primary;
+      text-transform: uppercase;
+    }
+
+    .invoice-table {
+      width: $width-100;
+      border-collapse: collapse;
+      font-size: $font-small;
+
+      thead {
+        background: $color-bg-gray;
+
+        tr {
+          th {
+            padding: $padding-small;
+            text-align: left;
+            font-weight: $font-weight;
+            color: $color-text-primary;
+            border-bottom: 2px solid $color-border-light;
+          }
+        }
+      }
+
+      tbody {
+        tr {
+          &:hover {
+            background: $color-bg-light;
+          }
+
+          td {
+            padding: $padding-small;
+            border-bottom: 1px solid $color-border-lighter;
+            color: $color-text-secondary;
+
+            &.actions-cell {
+              .icon-info,
+              .icon-approve,
+              .icon-reject {
+                cursor: pointer;
+                transition: color $transition-fast;
+              }
+
+              .icon-info {
+                color: $color-info;
+
+                &:hover {
+                  color: $color-info-hover;
+                }
+              }
+
+              .icon-approve {
+                color: $color-success;
+
+                &:hover {
+                  color: $color-success-hover;
+                }
+              }
+
+              .icon-reject {
+                color: $color-danger;
+
+                &:hover {
+                  color: $color-danger-hover;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

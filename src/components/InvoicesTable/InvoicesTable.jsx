@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes, faInfo } from '@fortawesome/free-solid-svg-icons';
 import { handleApprove, handleRejectClick } from '../../modules/invoiceActions';
 
-import './InvoicesTable.css';
+import './InvoicesTable.scss';
 
 function InvoicesTable({ invoices, removeInvoice, openRejectModal, openConfirmModal, openInfoModal }) {
   return (
