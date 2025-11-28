@@ -28,14 +28,14 @@ function InvoicesTable({ invoices, removeInvoice, openRejectModal, openConfirmMo
           <tbody>
             {invoices.map(inv => (
               <tr key={inv.id}>
-                <td>{inv.numero}</td>
-                <td>{inv.data}</td>
-                <td>{inv.tipoDocumento}</td>
-                <td>{inv.cedente?.nome || 'N/A'}</td>
-                <td>{inv.cedente?.partitaIva || 'N/A'}</td>
-                <td>{inv.totale} €</td>
-                <td>{inv.imponibile} €</td>
-                <td>{inv.aliquota}%</td>
+                <td data-label="Numero">{inv.numero}</td>
+                <td data-label="Data">{inv.data}</td>
+                <td data-label="Tipo Doc.">{inv.tipoDocumento}</td>
+                <td data-label="Fornitore">{inv.cedente?.nome || 'N/A'}</td>
+                <td data-label="P.IVA Fornitore">{inv.cedente?.partitaIva || 'N/A'}</td>
+                <td data-label="Totale">{inv.totale} €</td>
+                <td data-label="Imponibile">{inv.imponibile} €</td>
+                <td data-label="IVA">{inv.aliquota}%</td>
                 <td className="actions-cell">
                   <FontAwesomeIcon
                     icon={faInfo}

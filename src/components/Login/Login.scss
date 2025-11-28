@@ -14,7 +14,7 @@
     width: $width-100;
     max-width: 360px;
     background: $color-bg-white;
-    padding: $padding-small;
+    padding: $padding-sm;
     border-radius: $border-radius;
     box-shadow: $shadow-lg;
     gap: $spacing-md;
@@ -31,7 +31,7 @@
     }
 
     input {
-      padding: $padding-small;
+      padding: $padding-sm;
       border: 1px solid $color-border;
       color: $color-text-light;
       border-radius: $border-radius;
@@ -44,7 +44,7 @@
 
     .login-button {
       margin-top: $spacing-sm;
-      padding: $padding-small;
+      padding: $padding-sm;
       background: $color-primary;
       border: none;
       border-radius: $border-radius;
