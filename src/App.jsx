@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { registerUnauthorizedCallback, getInvoicesList, generateInvoicePDF } from "./api/apiClient";
+import { openPDFFromBase64 } from './utils/pdfUtils';
 
 import Login from './components/Login/Login';
 import InvoicesTable from './components/InvoicesTable/InvoicesTable';
@@ -13,6 +14,21 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  // ============================
+  // GESTIONE MODALI UNIFICATA
+  // ============================
+  const [rejectModal, setRejectModal] = useState({
+    isOpen: false,
+    invoiceId: null,
+  });
+
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    invoiceId: null,
+    invoiceNumber: null,
+    cedente: null,
+  });
 
   // ============================
   // CARICA TOKEN ALL'AVVIO
@@ -59,7 +75,6 @@ export default function App() {
 
       if (result.success) {
         setInvoices(result.invoices);
-        console.log('✅ Fatture caricate:', result.invoices.length);
       } else {
         console.error('Errore nel caricare le fatture');
       }
@@ -69,17 +84,6 @@ export default function App() {
       setLoading(false);
     }
   };
-
-  // ============================
-  // MODALI
-  // ============================
-  const [confirmModal, setConfirmModal] = useState({
-    isOpen: false,
-    invoiceId: null,
-    invoiceNumber: null,
-  });
-
-  const [modalInvoiceId, setModalInvoiceId] = useState(null);
 
   // ============================
   // LOGIN (dopo token in localStorage)
@@ -110,52 +114,45 @@ export default function App() {
     setInvoices(prev => prev.filter(inv => inv.id !== invoiceId));
   };
 
-  const openRejectModal = (invoiceId) => {
-    setModalInvoiceId(invoiceId);
+  const handleReject = (invoiceId) => {
+    setRejectModal({ isOpen: true, invoiceId });
   };
 
-  const closeRejectModal = () => {
-    setModalInvoiceId(null);
+  const handleConfirmReject = (reason) => {
+    console.log("Rifiutata fattura:", rejectModal.invoiceId, "Motivo:", reason);
+    removeInvoice(rejectModal.invoiceId);
+    setRejectModal({ isOpen: false, invoiceId: null });
   };
 
-  const confirmReject = (reason) => {
-    console.log("Rifiutata fattura:", modalInvoiceId, "Motivo:", reason);
-    removeInvoice(modalInvoiceId);
-    closeRejectModal();
-  };
-
-  const openConfirmModal = (invoiceId, invoiceNumber) => {
-    setConfirmModal({ isOpen: true, invoiceId, invoiceNumber });
-  };
-
-  const closeConfirmModal = () => {
-    setConfirmModal({ isOpen: false, invoiceId: null, invoiceNumber: null });
+  const handleApprove = (invoiceId, invoiceNumber, cedente) => {
+    setConfirmModal({ isOpen: true, invoiceId, invoiceNumber, cedente });
   };
 
   const handleConfirmApprove = () => {
     console.log("Approvata fattura:", confirmModal.invoiceId);
     removeInvoice(confirmModal.invoiceId);
-    closeConfirmModal();
+    setConfirmModal({ isOpen: false, invoiceId: null, invoiceNumber: null, invoiceCedente: null });
   };
 
-  const openInfoModal = async (invoiceId) => {
+  const handleViewInfo = async (invoiceId) => {
     const invoice = invoices.find(inv => inv.id === invoiceId);
     if (!invoice) return;
 
     try {
       const result = await generateInvoicePDF(invoice);
-      
-      const binary = atob(result.pdf);
-      const bytes = new Uint8Array(binary.length);
-      for (let i = 0; i < binary.length; i++) {
-        bytes[i] = binary.charCodeAt(i);
-      }
-      const blob = new Blob([bytes], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
-      window.open(url, '_blank');
+      openPDFFromBase64(result.pdf);
     } catch (err) {
       console.error('Errore nella generazione PDF:', err);
     }
+  };
+
+  // ============================
+  // ACTIONS OBJECT
+  // ============================
+  const invoiceActions = {
+    onApprove: handleApprove,
+    onReject: handleReject,
+    onViewInfo: handleViewInfo,
   };
 
   // ============================
@@ -186,24 +183,22 @@ export default function App() {
             ) : (
               <InvoicesTable
                 invoices={invoices}
-                removeInvoice={removeInvoice}
-                openRejectModal={openRejectModal}
-                openConfirmModal={openConfirmModal}
-                openInfoModal={openInfoModal}
+                actions={invoiceActions}
               />
             )}
 
             <ConfirmModal
               isOpen={confirmModal.isOpen}
-              onClose={closeConfirmModal}
+              onClose={() => setConfirmModal({ isOpen: false, invoiceId: null, invoiceNumber: null, cedente: null })}
               onConfirm={handleConfirmApprove}
               invoiceNumber={confirmModal.invoiceNumber}
+              cedente={confirmModal.cedente}
             />
 
             <RejectModal
-              isOpen={modalInvoiceId !== null}
-              onClose={closeRejectModal}
-              onConfirm={confirmReject}
+              isOpen={rejectModal.isOpen}
+              onClose={() => setRejectModal({ isOpen: false, invoiceId: null })}
+              onConfirm={handleConfirmReject}
             />
           </>
         )}

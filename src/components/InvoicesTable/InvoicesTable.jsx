@@ -1,10 +1,9 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes, faInfo } from '@fortawesome/free-solid-svg-icons';
-import { handleApprove, handleRejectClick } from '../../modules/invoiceActions';
 
 import './InvoicesTable.scss';
 
-function InvoicesTable({ invoices, removeInvoice, openRejectModal, openConfirmModal, openInfoModal }) {
+function InvoicesTable({ invoices, actions }) {
   return (
     <div className="table-page">
       <div className="table-container">
@@ -40,21 +39,21 @@ function InvoicesTable({ invoices, removeInvoice, openRejectModal, openConfirmMo
                     <FontAwesomeIcon
                       icon={faInfo}
                       className="icon-info"
-                      onClick={() => openInfoModal(inv.id)}
+                      onClick={() => actions.onViewInfo(inv.id)}
                       title="Visualizza dettagli"
                     />
 
                     <FontAwesomeIcon
                       icon={faCheck}
                       className="icon-approve"
-                      onClick={() => handleApprove(inv.id, inv.numero, openConfirmModal)}
+                      onClick={() => actions.onApprove(inv.id, inv.numero, inv.cedente?.nome)}
                       title="Approva"
                     />
 
                     <FontAwesomeIcon
                       icon={faTimes}
                       className="icon-reject"
-                      onClick={() => handleRejectClick(inv.id, openRejectModal)}
+                      onClick={() => actions.onReject(inv.id)}
                       title="Rifiuta"
                     />
                   </td>
