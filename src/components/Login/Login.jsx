@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { loginRequest } from '../../api/apiClient';
-import './Login.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import './Login.scss';
 
 function Login({ onLogin }) {
   const [username, setUsername] = useState('');
@@ -12,10 +14,10 @@ function Login({ onLogin }) {
     try {
       const data = await loginRequest(username, password);
 
-      // Salvare token (lo useremo in step 2)
+      // Salvare token
       localStorage.setItem("token", data.access_token);
 
-      // Non abbiamo il “user” nel token, ma lo recupereremo dallo decode JWT in step 2
+      // User che serve nel token lo recupero dallo decode JWT
       onLogin({ username });
 
     } catch (error) {
@@ -27,7 +29,13 @@ function Login({ onLogin }) {
   return (
     <div className="login-page">
       <form className="login-container" onSubmit={handleSubmit}>
-        <h2 className="login-title">Login</h2>
+        <h2 className="login-title">
+          <FontAwesomeIcon
+          icon={faUser}
+          className="icon-user"
+          />
+          Login
+        </h2>
 
         <label>Username</label>
         <input
