@@ -27,6 +27,10 @@
         border-radius: $border-radius;
         cursor: pointer;
         background: $color-danger-light;
+
+        svg {
+          margin-right: $spacing-xs;
+        }
       }
     }
   }

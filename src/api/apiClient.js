@@ -7,7 +7,7 @@ export function registerUnauthorizedCallback(fn) {
   unauthorizedCallback = fn;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 /**
  * Funzione generica per chiamate API
@@ -70,6 +70,10 @@ export function getInvoicePdf(codiceUnico) {
   return apiRequest(`/invoices/${codiceUnico}/pdf`);
 }
 
+export function updateInvoiceStatus(codiceUnico, stato, note) {
+  return apiRequest(`/invoices/${codiceUnico}/status`, "PATCH", { stato, note });
+}
+
 export function parseXmlFiles() {
   return apiRequest("/invoices/parse-xml-files", "POST");
 }
@@ -79,7 +83,7 @@ export function generateInvoicePDF(invoiceData, codiceUnico) {
 }
 
 // ============================
-// USERS (esempio per future chiamate)
+// USERS
 // ============================
 export function getUsers() {
   return apiRequest("/users");

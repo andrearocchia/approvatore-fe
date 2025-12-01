@@ -26,7 +26,6 @@ function InvoicesTable({ invoices, actions }) {
                 <th>Fornitore</th>
                 <th>P.IVA Fornitore</th>
                 <th>Totale</th>
-                <th>Imponibile</th>
                 <th>IVA</th>
                 <th>Azione</th>
               </tr>
@@ -56,7 +55,6 @@ function InvoicesTable({ invoices, actions }) {
 
                   {/* VALORI MONETARI */}
                   <td data-label="Totale">{formatCurrency(inv.totale)} €</td>
-                  <td data-label="Imponibile">{formatCurrency(inv.imponibile)} €</td>
                   <td data-label="IVA">{inv.aliquota ? `${formatCurrency(inv.aliquota)}%` : '—'}</td>
 
                   <td className="actions-cell">

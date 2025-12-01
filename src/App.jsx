@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import { registerUnauthorizedCallback, getStandByInvoices, getInvoicePdf } from "./api/apiClient";
+import { registerUnauthorizedCallback, getStandByInvoices, getInvoicePdf, updateInvoiceStatus } from "./api/apiClient";
 import { openPDFFromBase64 } from './utils/pdfUtils';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 import Login from './components/Login/Login';
 import InvoicesTable from './components/InvoicesTable/InvoicesTable';
 import RejectModal from './components/RejectModal/RejectModal';
@@ -119,22 +120,32 @@ export default function App() {
     setRejectModal({ isOpen: true, invoiceId });
   };
 
-  const handleConfirmReject = (reason) => {
-    console.log("Rifiutata fattura:", rejectModal.invoiceId, "Motivo:", reason);
-    // TODO: chiamare API per aggiornare stato a "rifiutato" con nota
-    removeInvoice(rejectModal.invoiceId);
-    setRejectModal({ isOpen: false, invoiceId: null });
+  const handleConfirmReject = async (reason) => {
+    try {
+      await updateInvoiceStatus(rejectModal.invoiceId, 'rifiutato', reason);
+      console.log("Fattura rifiutata:", rejectModal.invoiceId, "Motivo:", reason);
+      removeInvoice(rejectModal.invoiceId);
+      setRejectModal({ isOpen: false, invoiceId: null });
+    } catch (error) {
+      console.error('Errore nel rifiutare la fattura:', error);
+      alert('Errore durante il rifiuto della fattura');
+    }
   };
 
   const handleApprove = (invoiceId, invoiceNumber, cedente) => {
     setConfirmModal({ isOpen: true, invoiceId, invoiceNumber, cedente });
   };
 
-  const handleConfirmApprove = () => {
-    console.log("Approvata fattura:", confirmModal.invoiceId);
-    // TODO: chiamare API per aggiornare stato a "approvato"
-    removeInvoice(confirmModal.invoiceId);
-    setConfirmModal({ isOpen: false, invoiceId: null, invoiceNumber: null, cedente: null });
+  const handleConfirmApprove = async () => {
+    try {
+      await updateInvoiceStatus(confirmModal.invoiceId, 'approvato');
+      console.log("Fattura approvata:", confirmModal.invoiceId);
+      removeInvoice(confirmModal.invoiceId);
+      setConfirmModal({ isOpen: false, invoiceId: null, invoiceNumber: null, cedente: null });
+    } catch (error) {
+      console.error('Errore nell\'approvare la fattura:', error);
+      alert('Errore durante l\'approvazione della fattura');
+    }
   };
 
   const handleViewInfo = async (invoiceId) => {
@@ -172,6 +183,11 @@ export default function App() {
           <div className="app-user">
             <span className="app-username">Ciao, {user.username}</span>
             <button className="app-logout" onClick={handleLogout}>
+              <FontAwesomeIcon
+                icon={faUser}
+                className="icon-user"
+                title="Logout"
+              />
               Logout
             </button>
           </div>
