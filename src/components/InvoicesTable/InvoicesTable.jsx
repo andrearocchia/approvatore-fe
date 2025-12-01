@@ -19,12 +19,12 @@ function InvoicesTable({ invoices, actions }) {
           <table className="invoice-table">
             <thead>
               <tr>
-                <th>Codice Unico</th>
+                <th>Id</th>
                 <th>Numero</th>
                 <th>Data</th>
                 <th>Tipo Doc.</th>
                 <th>Fornitore</th>
-                <th>P.IVA Fornitore</th>
+                <th>P.IVA</th>
                 <th>Totale</th>
                 <th>IVA</th>
                 <th>Azione</th>

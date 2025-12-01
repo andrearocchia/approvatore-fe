@@ -3,7 +3,7 @@ import { jwtDecode } from 'jwt-decode';
 import { registerUnauthorizedCallback, getStandByInvoices, getInvoicePdf, updateInvoiceStatus } from "./api/apiClient";
 import { openPDFFromBase64 } from './utils/pdfUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faClock } from '@fortawesome/free-solid-svg-icons';
 import Login from './components/Login/Login';
 import InvoicesTable from './components/InvoicesTable/InvoicesTable';
 import RejectModal from './components/RejectModal/RejectModal';
@@ -182,14 +182,24 @@ export default function App() {
         {user && (
           <div className="app-user">
             <span className="app-username">Ciao, {user.username}</span>
-            <button className="app-logout" onClick={handleLogout}>
-              <FontAwesomeIcon
-                icon={faUser}
-                className="icon-user"
-                title="Logout"
-              />
-              Logout
-            </button>
+            <div className='button-room'>
+              <button className="app-logout" onClick={handleLogout}>
+                <FontAwesomeIcon
+                  icon={faUser}
+                  className="icon-user"
+                  title="Logout"
+                />
+                <span className="app-logout-text">Logout</span>
+              </button>
+              <button className="invoice-history">
+                <FontAwesomeIcon
+                  icon={faClock}
+                  className="invoice-history"
+                  title="Storico"
+                />
+                <span className="invoice-history-text">Storico</span>
+              </button>
+            </div>
           </div>
         )}
       </header>

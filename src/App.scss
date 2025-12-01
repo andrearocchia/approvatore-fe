@@ -21,15 +21,30 @@
         margin-right: 12px;
       }
 
-      .app-logout {
-        padding: 6px 10px;
-        border: none;
-        border-radius: $border-radius;
-        cursor: pointer;
-        background: $color-danger-light;
+      .button-room {
+        display: flex;
+        gap: 0.5rem;
+        
+        .app-logout, .invoice-history {
+          border: none;
+          border-radius: $border-radius;
+          cursor: pointer;
+          background: $color-danger-light;
+        
+          span {
+            display: none;
+          }
 
-        svg {
-          margin-right: $spacing-xs;
+          @media (min-width: 768px) {
+            span {
+              display: inline;
+              margin-left: $spacing-xs;
+            }
+          }
+        }
+
+        .invoice-history {
+          background: $color-primary;
         }
       }
     }
