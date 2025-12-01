@@ -54,12 +54,24 @@ export function loginRequest(username, password) {
 // ============================
 // INVOICES
 // ============================
-export function getInvoicesList() {
-  return apiRequest("/invoices/list");
+export function getStandByInvoices() {
+  return apiRequest("/invoices/standby");
 }
 
-export function generateInvoicePDF(invoiceData) {
-  return apiRequest("/invoices/generate-pdf", "POST", invoiceData);
+export function getAllInvoices() {
+  return apiRequest("/invoices/all");
+}
+
+export function getInvoiceById(codiceUnico) {
+  return apiRequest(`/invoices/${codiceUnico}`);
+}
+
+export function parseXmlFiles() {
+  return apiRequest("/invoices/parse-xml-files", "POST");
+}
+
+export function generateInvoicePDF(invoiceData, codiceUnico) {
+  return apiRequest("/invoices/generate-pdf", "POST", { invoiceData, codiceUnico });
 }
 
 // ============================

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import { registerUnauthorizedCallback, getInvoicesList, generateInvoicePDF } from "./api/apiClient";
+import { registerUnauthorizedCallback, getStandByInvoices, generateInvoicePDF } from "./api/apiClient";
 import { openPDFFromBase64 } from './utils/pdfUtils';
 
 import Login from './components/Login/Login';
@@ -60,7 +60,7 @@ export default function App() {
   }, []);
 
   // ============================
-  // CARICA FATTURE DA XML
+  // CARICA FATTURE DA DB
   // ============================
   useEffect(() => {
     if (user) {
@@ -71,12 +71,13 @@ export default function App() {
   const loadInvoices = async () => {
     setLoading(true);
     try {
-      const result = await getInvoicesList();
+      const result = await getStandByInvoices();
 
       if (result.success) {
+        console.log('Fatture caricate:', result.invoices);
         setInvoices(result.invoices);
       } else {
-        console.error('Errore nel caricare le fatture');
+        console.error('Errore nel caricare le fatture:', result.message);
       }
     } catch (error) {
       console.error('Errore nel caricare le fatture:', error);
@@ -120,6 +121,7 @@ export default function App() {
 
   const handleConfirmReject = (reason) => {
     console.log("Rifiutata fattura:", rejectModal.invoiceId, "Motivo:", reason);
+    // TODO: chiamare API per aggiornare stato a "rifiutato" con nota
     removeInvoice(rejectModal.invoiceId);
     setRejectModal({ isOpen: false, invoiceId: null });
   };
@@ -130,19 +132,34 @@ export default function App() {
 
   const handleConfirmApprove = () => {
     console.log("Approvata fattura:", confirmModal.invoiceId);
+    // TODO: chiamare API per aggiornare stato a "approvato"
     removeInvoice(confirmModal.invoiceId);
-    setConfirmModal({ isOpen: false, invoiceId: null, invoiceNumber: null, invoiceCedente: null });
+    setConfirmModal({ isOpen: false, invoiceId: null, invoiceNumber: null, cedente: null });
   };
 
   const handleViewInfo = async (invoiceId) => {
     const invoice = invoices.find(inv => inv.id === invoiceId);
-    if (!invoice) return;
+    if (!invoice) {
+      console.error('Fattura non trovata');
+      return;
+    }
 
     try {
-      const result = await generateInvoicePDF(invoice);
-      openPDFFromBase64(result.pdf);
+      console.log('Generazione PDF per fattura:', invoiceId);
+      
+      // Rimuove l'id dalla invoice data perché non serve nel backend
+      const { id, ...invoiceData } = invoice;
+      
+      const result = await generateInvoicePDF(invoiceData, parseInt(invoiceId));
+      
+      if (result.pdf) {
+        openPDFFromBase64(result.pdf);
+      } else {
+        console.error('PDF non ricevuto dal server');
+      }
     } catch (err) {
       console.error('Errore nella generazione PDF:', err);
+      alert('Errore nella generazione del PDF');
     }
   };
 
@@ -176,7 +193,7 @@ export default function App() {
           <Login onLogin={handleLogin} />
         ) : (
           <>
-            {loading ? (
+            {loading && invoices.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '2rem' }}>
                 Caricamento fatture...
               </div>
