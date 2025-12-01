@@ -66,6 +66,10 @@ export function getInvoiceById(codiceUnico) {
   return apiRequest(`/invoices/${codiceUnico}`);
 }
 
+export function getInvoicePdf(codiceUnico) {
+  return apiRequest(`/invoices/${codiceUnico}/pdf`);
+}
+
 export function parseXmlFiles() {
   return apiRequest("/invoices/parse-xml-files", "POST");
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import { registerUnauthorizedCallback, getStandByInvoices, generateInvoicePDF } from "./api/apiClient";
+import { registerUnauthorizedCallback, getStandByInvoices, getInvoicePdf } from "./api/apiClient";
 import { openPDFFromBase64 } from './utils/pdfUtils';
 
 import Login from './components/Login/Login';
@@ -16,7 +16,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
 
   // ============================
-  // GESTIONE MODALI UNIFICATA
+  // GESTIONE MODALI
   // ============================
   const [rejectModal, setRejectModal] = useState({
     isOpen: false,
@@ -60,6 +60,28 @@ export default function App() {
   }, []);
 
   // ============================
+  // LOGIN (dopo token in localStorage)
+  // ============================
+  const handleLogin = () => {
+    const token = localStorage.getItem("token");
+    const decoded = jwtDecode(token);
+
+    setUser({
+      username: decoded.username,
+      role: decoded.role,
+      token,
+    });
+  };
+
+  // ============================
+  // LOGOUT
+  // ============================
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+  };
+  
+  // ============================
   // CARICA FATTURE DA DB
   // ============================
   useEffect(() => {
@@ -84,28 +106,6 @@ export default function App() {
     } finally {
       setLoading(false);
     }
-  };
-
-  // ============================
-  // LOGIN (dopo token in localStorage)
-  // ============================
-  const handleLogin = () => {
-    const token = localStorage.getItem("token");
-    const decoded = jwtDecode(token);
-
-    setUser({
-      username: decoded.username,
-      role: decoded.role,
-      token,
-    });
-  };
-
-  // ============================
-  // LOGOUT
-  // ============================
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setUser(null);
   };
 
   // ============================
@@ -138,28 +138,18 @@ export default function App() {
   };
 
   const handleViewInfo = async (invoiceId) => {
-    const invoice = invoices.find(inv => inv.id === invoiceId);
-    if (!invoice) {
-      console.error('Fattura non trovata');
-      return;
-    }
-
     try {
-      console.log('Generazione PDF per fattura:', invoiceId);
+      const result = await getInvoicePdf(invoiceId);
       
-      // Rimuove l'id dalla invoice data perché non serve nel backend
-      const { id, ...invoiceData } = invoice;
-      
-      const result = await generateInvoicePDF(invoiceData, parseInt(invoiceId));
-      
-      if (result.pdf) {
+      if (result.success && result.pdf) {
         openPDFFromBase64(result.pdf);
       } else {
-        console.error('PDF non ricevuto dal server');
+        console.error('PDF non trovato nella risposta');
+        alert('PDF non trovato per questa fattura');
       }
     } catch (err) {
-      console.error('Errore nella generazione PDF:', err);
-      alert('Errore nella generazione del PDF');
+      console.error('Errore nel recupero PDF:', err);
+      alert('Errore: PDF non trovato. Potrebbe non essere stato ancora generato.');
     }
   };
 
