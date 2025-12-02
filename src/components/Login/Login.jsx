@@ -33,10 +33,8 @@ function Login({ onLogin }) {
           <FontAwesomeIcon
           icon={faUser}
           className="icon-user"
-          />
-          Login
+          />Login
         </h2>
-
         <label>Username</label>
         <input
           type="text"
@@ -44,7 +42,6 @@ function Login({ onLogin }) {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-
         <label>Password</label>
         <input
           type="password"
@@ -52,7 +49,6 @@ function Login({ onLogin }) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-
         <button type="submit" className="login-button">Accedi</button>
       </form>
     </div>

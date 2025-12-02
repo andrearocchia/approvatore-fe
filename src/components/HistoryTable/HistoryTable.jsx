@@ -1,3 +1,5 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import "./HistoryTable.scss";
 
 function HistoryTable({ invoices }) {
@@ -27,7 +29,6 @@ function HistoryTable({ invoices }) {
                 <th>Note</th>
               </tr>
             </thead>
-
             <tbody>
               {invoices.length === 0 && (
                 <tr>
@@ -36,21 +37,30 @@ function HistoryTable({ invoices }) {
                   </td>
                 </tr>
               )}
-
               {invoices.map((inv) => (
-                <tr 
-                  key={inv.id} 
-                  className={`row-status-${inv.stato}`}
-                >
-                  <td>{inv.id}</td>
-                  <td>{inv.numero || "—"}</td>
-                  <td>{inv.data ? new Date(inv.data).toLocaleDateString("it-IT") : "—"}</td>
-                  <td>{inv.tipoDocumento || "—"}</td>
-                  <td>{inv.cedente?.nome || "N/A"}</td>
-                  <td>{inv.cedente?.partitaIva || "N/A"}</td>
-                  <td>{formatCurrency(inv.totale)} €</td>
-                  <td>{inv.stato}</td>
-                  <td>{inv.note || "—"}</td>
+                <tr key={inv.id} className={`row-status-${inv.stato}`}>
+                  <td data-label="Codice Unico">{inv.id}</td>
+                  <td data-label="Numero">{inv.numero || "—"}</td>
+                  <td data-label="Data">{inv.data ? new Date(inv.data).toLocaleDateString("it-IT") : "—"}</td>
+                  <td data-label="Tipo Doc.">{inv.tipoDocumento || "—"}</td>
+                  <td data-label="Fornitore">{inv.cedente?.nome || "N/A"}</td>
+                  <td data-label="P.IVA Fornitore">{inv.cedente?.partitaIva || "N/A"}</td>
+                  <td data-label="Totale">{formatCurrency(inv.totale)} €</td>
+                  <td data-label="Stato">{inv.stato}</td>
+                  <td data-label="Note">
+                    {inv.note ? (
+                      <FontAwesomeIcon
+                        icon={faCircle}
+                        className="icon-note"
+                        style={{ color: "#007BFF" }} // Colorato se c'è la nota
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={faCircle}
+                        className="icon-note"
+                      />
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

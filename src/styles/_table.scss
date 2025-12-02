@@ -1,0 +1,132 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.table-page {
+  .table-container {
+    background: $color-bg-white;
+    border-radius: $border-radius;
+    box-shadow: $shadow-sm;
+    padding: $padding;
+
+    .table-title {
+      @include flex-center;
+      font-size: $font-title;
+      color: $color-primary;
+      text-transform: uppercase;
+      margin-bottom: $spacing-lg;
+    }
+
+    .table-scroll {
+      max-height: 70vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+
+      /* Chrome, Edge, Safari */
+      &::-webkit-scrollbar {
+        width: 8px;
+      }
+      &::-webkit-scrollbar-track {
+        background: $color-bg-light; 
+        border-radius: 8px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: $color-border-light;
+        border-radius: 8px;
+      }
+      &::-webkit-scrollbar-thumb:hover {
+        background: $color-primary;
+      }
+
+      /* Firefox */
+      scrollbar-width: thin;  
+      scrollbar-color: $color-border-light $color-bg-light;
+
+      .invoice-table {
+        width: $width-100;
+        border-collapse: collapse;
+        font-size: $font-small;
+        display: block;
+        min-width: $width-100;
+
+        thead {
+          display: none;
+        }
+
+        tbody {
+          display: block;
+
+          tr {
+            display: block;
+            background: $color-bg-light;
+            border-radius: $border-radius;
+            border: 1px solid $color-border;
+            padding: 0.25rem;
+            width: $width-95;
+            margin-bottom: $spacing-md;
+
+            td {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              text-align: left;
+              border-bottom: none;
+              color: $color-text-secondary;
+
+              &::before {
+                content: attr(data-label);
+                font-weight: $font-weight;
+                color: $color-text-primary;
+                flex: 0 0 40%;
+              }
+            }
+          }
+        }
+      }
+
+      @media (min-width: 768px) {
+        .invoice-table {
+          display: table;
+
+          thead {
+            display: table-header-group;
+            border: 1px solid $color-border;
+            border-bottom: none;
+            background: $color-bg-gray;
+
+            tr {
+              th {
+                padding: $padding-sm;
+                text-align: center;
+                font-weight: $font-weight;
+                color: $color-text-primary;
+                border-bottom: 2px solid $color-border-light;
+              }
+            }
+          }
+
+          tbody {
+            display: table-row-group;
+
+            tr {
+              display: table-row;
+              background: transparent;
+              border-radius: 0;
+              padding: 0;
+              margin-bottom: 0;
+
+              td {
+                display: table-cell;
+                text-align: center;
+                color: $color-text-secondary;
+
+                &::before {
+                  display: none;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

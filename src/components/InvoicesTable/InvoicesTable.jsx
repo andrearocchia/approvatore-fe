@@ -14,7 +14,6 @@ function InvoicesTable({ invoices, actions }) {
     <div className="table-page">
       <div className="table-container">
         <h2 className="table-title">Fatture in Attesa</h2>
-
         <div className="table-scroll">
           <table className="invoice-table">
             <thead>
@@ -30,7 +29,6 @@ function InvoicesTable({ invoices, actions }) {
                 <th>Azione</th>
               </tr>
             </thead>
-
             <tbody>
               {invoices.length === 0 && (
                 <tr>
@@ -39,24 +37,16 @@ function InvoicesTable({ invoices, actions }) {
                   </td>
                 </tr>
               )}
-
               {invoices.map(inv => (
                 <tr key={inv.id}>
                   <td data-label="Codice Unico">{inv.id}</td>
                   <td data-label="Numero">{inv.numero || '—'}</td>
-                  <td data-label="Data">
-                    {inv.data ? new Date(inv.data).toLocaleDateString('it-IT') : '—'}
-                  </td>
+                  <td data-label="Data">{inv.data ? new Date(inv.data).toLocaleDateString('it-IT') : '—'}</td>
                   <td data-label="Tipo Doc.">{inv.tipoDocumento || '—'}</td>
-
-                  {/* CEDENTE / FORNITORE */}
                   <td data-label="Fornitore">{inv.cedente?.nome || 'N/A'}</td>
                   <td data-label="P.IVA Fornitore">{inv.cedente?.partitaIva || 'N/A'}</td>
-
-                  {/* VALORI MONETARI */}
                   <td data-label="Totale">{formatCurrency(inv.totale)} €</td>
                   <td data-label="IVA">{inv.aliquota ? `${formatCurrency(inv.aliquota)}%` : '—'}</td>
-
                   <td className="actions-cell">
                     <FontAwesomeIcon
                       icon={faInfo}
@@ -64,20 +54,16 @@ function InvoicesTable({ invoices, actions }) {
                       onClick={() => actions.onViewInfo(inv.id)}
                       title="Visualizza dettagli"
                     />
-
                     <FontAwesomeIcon
                       icon={faCheck}
                       className="icon-approve"
-                      onClick={() =>
-                        actions.onApprove(
-                          inv.id,
-                          inv.numero,
-                          inv.cedente?.nome
-                        )
-                      }
+                      onClick={() =>actions.onApprove(
+                        inv.id,
+                        inv.numero,
+                        inv.cedente?.nome
+                      )}
                       title="Approva"
                     />
-
                     <FontAwesomeIcon
                       icon={faTimes}
                       className="icon-reject"
@@ -88,7 +74,6 @@ function InvoicesTable({ invoices, actions }) {
                 </tr>
               ))}
             </tbody>
-
           </table>
         </div>
       </div>
