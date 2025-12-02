@@ -24,8 +24,8 @@
       .button-room {
         display: flex;
         gap: 0.5rem;
-        
-        .app-logout, .invoice-history {
+
+        .app-logout, .invoice-history, .back-button {
           border: none;
           border-radius: $border-radius;
           cursor: pointer;
@@ -41,6 +41,10 @@
               margin-left: $spacing-xs;
             }
           }
+        }
+        
+        .back-button {
+          background-color: $color-secondary;
         }
 
         .invoice-history {

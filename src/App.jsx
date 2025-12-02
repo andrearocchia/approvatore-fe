@@ -1,11 +1,22 @@
 import { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import { registerUnauthorizedCallback, getStandByInvoices, getInvoicePdf, updateInvoiceStatus } from "./api/apiClient";
+import { 
+  registerUnauthorizedCallback, 
+  getStandByInvoices, 
+  getAllInvoices,
+  getInvoicePdf, 
+  updateInvoiceStatus 
+} from "./api/apiClient";
+
 import { openPDFFromBase64 } from './utils/pdfUtils';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faClock } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faClock, faList } from '@fortawesome/free-solid-svg-icons';
+
 import Login from './components/Login/Login';
 import InvoicesTable from './components/InvoicesTable/InvoicesTable';
+import HistoryTable from './components/HistoryTable/HistoryTable';
+
 import RejectModal from './components/RejectModal/RejectModal';
 import ConfirmModal from './components/ConfirmModal/ConfirmModal';
 
@@ -14,11 +25,11 @@ import './App.scss';
 export default function App() {
   const [user, setUser] = useState(null);
   const [invoices, setInvoices] = useState([]);
+  const [historyInvoices, setHistoryInvoices] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // ============================
-  // GESTIONE MODALI
-  // ============================
+  const [showHistory, setShowHistory] = useState(false);
+
   const [rejectModal, setRejectModal] = useState({
     isOpen: false,
     invoiceId: null,
@@ -31,23 +42,18 @@ export default function App() {
     cedente: null,
   });
 
-  // ============================
-  // CARICA TOKEN ALL'AVVIO
-  // ============================
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     if (token) {
       try {
         const decoded = jwtDecode(token);
-
         setUser({
           username: decoded.username,
           role: decoded.role,
           token,
         });
-      } catch (err) {
-        console.error("Token non valido. Logout eseguito.");
+      } catch {
         localStorage.removeItem("token");
       }
     }
@@ -55,14 +61,10 @@ export default function App() {
 
   useEffect(() => {
     registerUnauthorizedCallback(() => {
-      console.warn("Token scaduto o non valido. Logout automatico.");
       handleLogout();
     });
   }, []);
 
-  // ============================
-  // LOGIN (dopo token in localStorage)
-  // ============================
   const handleLogin = () => {
     const token = localStorage.getItem("token");
     const decoded = jwtDecode(token);
@@ -74,17 +76,11 @@ export default function App() {
     });
   };
 
-  // ============================
-  // LOGOUT
-  // ============================
   const handleLogout = () => {
     localStorage.removeItem("token");
     setUser(null);
   };
-  
-  // ============================
-  // CARICA FATTURE DA DB
-  // ============================
+
   useEffect(() => {
     if (user) {
       loadInvoices();
@@ -95,23 +91,30 @@ export default function App() {
     setLoading(true);
     try {
       const result = await getStandByInvoices();
-
       if (result.success) {
-        console.log('Fatture caricate:', result.invoices);
         setInvoices(result.invoices);
-      } else {
-        console.error('Errore nel caricare le fatture:', result.message);
       }
     } catch (error) {
-      console.error('Errore nel caricare le fatture:', error);
+      console.error("Errore nel caricare le fatture:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  // ============================
-  // LOGICA FATTURE
-  // ============================
+  const loadHistoryInvoices = async () => {
+    setLoading(true);
+    try {
+      const result = await getAllInvoices();
+      if (result.success) {
+        setHistoryInvoices(result.invoices);
+      }
+    } catch (error) {
+      console.error("Errore storico:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const removeInvoice = (invoiceId) => {
     setInvoices(prev => prev.filter(inv => inv.id !== invoiceId));
   };
@@ -123,12 +126,10 @@ export default function App() {
   const handleConfirmReject = async (reason) => {
     try {
       await updateInvoiceStatus(rejectModal.invoiceId, 'rifiutato', reason);
-      console.log("Fattura rifiutata:", rejectModal.invoiceId, "Motivo:", reason);
       removeInvoice(rejectModal.invoiceId);
       setRejectModal({ isOpen: false, invoiceId: null });
     } catch (error) {
-      console.error('Errore nel rifiutare la fattura:', error);
-      alert('Errore durante il rifiuto della fattura');
+      alert("Errore durante il rifiuto della fattura");
     }
   };
 
@@ -139,66 +140,65 @@ export default function App() {
   const handleConfirmApprove = async () => {
     try {
       await updateInvoiceStatus(confirmModal.invoiceId, 'approvato');
-      console.log("Fattura approvata:", confirmModal.invoiceId);
       removeInvoice(confirmModal.invoiceId);
       setConfirmModal({ isOpen: false, invoiceId: null, invoiceNumber: null, cedente: null });
-    } catch (error) {
-      console.error('Errore nell\'approvare la fattura:', error);
-      alert('Errore durante l\'approvazione della fattura');
+    } catch {
+      alert("Errore durante l'approvazione");
     }
   };
 
   const handleViewInfo = async (invoiceId) => {
     try {
       const result = await getInvoicePdf(invoiceId);
-      
       if (result.success && result.pdf) {
         openPDFFromBase64(result.pdf);
       } else {
-        console.error('PDF non trovato nella risposta');
-        alert('PDF non trovato per questa fattura');
+        alert("PDF non disponibile");
       }
-    } catch (err) {
-      console.error('Errore nel recupero PDF:', err);
-      alert('Errore: PDF non trovato. Potrebbe non essere stato ancora generato.');
+    } catch {
+      alert("Errore nel recupero del PDF");
     }
   };
 
-  // ============================
-  // ACTIONS OBJECT
-  // ============================
   const invoiceActions = {
     onApprove: handleApprove,
     onReject: handleReject,
     onViewInfo: handleViewInfo,
   };
 
-  // ============================
-  // RENDER
-  // ============================
   return (
     <div className="app-container">
       <header className="app-header">
         {user && (
           <div className="app-user">
             <span className="app-username">Ciao, {user.username}</span>
-            <div className='button-room'>
+
+            <div className="button-room">
+              {showHistory ? (
+                <button
+                  className="back-button"
+                  onClick={() => setShowHistory(false)}>
+                  <FontAwesomeIcon icon={faList} />
+                  <span className="invoice-list">Fatture</span>
+                </button>
+              ) : (
+                <button
+                  className="invoice-history"
+                  onClick={() => {
+                    setShowHistory(true);
+                    loadHistoryInvoices();
+                  }}>
+                  <FontAwesomeIcon icon={faClock} />
+                  <span className="invoice-history-text">Storico</span>
+                </button>
+              )}
+
+              {/* Logout */}
               <button className="app-logout" onClick={handleLogout}>
-                <FontAwesomeIcon
-                  icon={faUser}
-                  className="icon-user"
-                  title="Logout"
-                />
+                <FontAwesomeIcon icon={faUser} />
                 <span className="app-logout-text">Logout</span>
               </button>
-              <button className="invoice-history">
-                <FontAwesomeIcon
-                  icon={faClock}
-                  className="invoice-history"
-                  title="Storico"
-                />
-                <span className="invoice-history-text">Storico</span>
-              </button>
+
             </div>
           </div>
         )}
@@ -207,22 +207,24 @@ export default function App() {
       <main>
         {!user ? (
           <Login onLogin={handleLogin} />
+        ) : loading ? (
+          <div style={{ textAlign: "center", padding: "2rem" }}>
+            Caricamento...
+          </div>
+        ) : showHistory ? (
+          <HistoryTable
+            invoices={historyInvoices}
+            onBack={() => setShowHistory(false)}
+          />
         ) : (
           <>
-            {loading && invoices.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '2rem' }}>
-                Caricamento fatture...
-              </div>
-            ) : (
-              <InvoicesTable
-                invoices={invoices}
-                actions={invoiceActions}
-              />
-            )}
+            <InvoicesTable invoices={invoices} actions={invoiceActions} />
 
             <ConfirmModal
               isOpen={confirmModal.isOpen}
-              onClose={() => setConfirmModal({ isOpen: false, invoiceId: null, invoiceNumber: null, cedente: null })}
+              onClose={() =>
+                setConfirmModal({ isOpen: false, invoiceId: null, invoiceNumber: null, cedente: null })
+              }
               onConfirm={handleConfirmApprove}
               invoiceNumber={confirmModal.invoiceNumber}
               cedente={confirmModal.cedente}

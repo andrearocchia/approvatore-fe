@@ -74,14 +74,6 @@ export function updateInvoiceStatus(codiceUnico, stato, note) {
   return apiRequest(`/invoices/${codiceUnico}/status`, "PATCH", { stato, note });
 }
 
-export function parseXmlFiles() {
-  return apiRequest("/invoices/parse-xml-files", "POST");
-}
-
-export function generateInvoicePDF(invoiceData, codiceUnico) {
-  return apiRequest("/invoices/generate-pdf", "POST", { invoiceData, codiceUnico });
-}
-
 // ============================
 // USERS
 // ============================

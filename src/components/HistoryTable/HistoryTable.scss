@@ -61,10 +61,22 @@
           tr {
             display: block;
             background: $color-bg-light;
-            border: 1px solid $color-border-lighter;
+            border: 1px solid $color-border;
             border-radius: $border-radius;
             padding: $spacing-md;
             margin-bottom: $spacing-md;
+
+            &.row-status-approvato {
+              background-color: rgba(0, 200, 0, 0.12);
+            }
+
+            &.row-status-rifiutato {
+              background-color: rgba(255, 0, 0, 0.12);
+            }
+
+            &.row-status-in_attesa {
+              background-color: rgba(255, 165, 0, 0.15);
+            }
 
             td {
               display: flex;
@@ -79,49 +91,6 @@
                 font-weight: $font-weight;
                 color: $color-text-primary;
                 flex: 0 0 40%;
-              }
-
-              &.actions-cell {
-                justify-content: center;
-                gap: $spacing-xl;
-                padding-top: $spacing-md;
-                border-top: 2px solid $color-border;
-
-                &::before {
-                  display: none;
-                }
-
-                .icon-info,
-                .icon-approve,
-                .icon-reject {
-                  cursor: pointer;
-                  transition: color $transition-fast;
-                  font-size: $font-medium;
-                }
-
-                .icon-info {
-                  color: $color-info;
-
-                  &:hover {
-                    color: $color-info-hover;
-                  }
-                }
-
-                .icon-approve {
-                  color: $color-success;
-
-                  &:hover {
-                    color: $color-success-hover;
-                  }
-                }
-
-                .icon-reject {
-                  color: $color-danger;
-
-                  &:hover {
-                    color: $color-danger-hover;
-                  }
-                }
               }
             }
           }
@@ -158,57 +127,14 @@
               padding: 0;
               margin-bottom: 0;
 
-              &:hover {
-                background: $color-bg-light;
-              }
-
               td {
                 display: table-cell;
                 padding: $padding-xs;
-                border-bottom: 1px solid $color-border-lighter;
+                border-bottom: 1px solid $color-border;
                 color: $color-text-secondary;
 
                 &::before {
                   display: none;
-                }
-
-                &.actions-cell {
-                  display: table-cell;
-                  padding: $padding-sm;
-                  border-top: none;
-                  text-align: center;
-
-                  .icon-info,
-                  .icon-approve,
-                  .icon-reject {
-                    cursor: pointer;
-                    transition: color $transition-fast;
-                    margin: 0 $spacing-xs;
-                  }
-
-                  .icon-info {
-                    color: $color-info;
-
-                    &:hover {
-                      color: $color-info-hover;
-                    }
-                  }
-
-                  .icon-approve {
-                    color: $color-success;
-
-                    &:hover {
-                      color: $color-success-hover;
-                    }
-                  }
-
-                  .icon-reject {
-                    color: $color-danger;
-
-                    &:hover {
-                      color: $color-danger-hover;
-                    }
-                  }
                 }
               }
             }
