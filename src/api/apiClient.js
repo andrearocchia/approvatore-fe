@@ -7,7 +7,7 @@ export function registerUnauthorizedCallback(fn) {
   unauthorizedCallback = fn;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
 /**
  * Funzione generica per chiamate API
