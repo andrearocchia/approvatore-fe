@@ -24,6 +24,7 @@ function HistoryTable({ invoices }) {
                 <th>P.IVA</th>
                 <th>Totale</th>
                 <th>Stato</th>
+                <th>Note</th>
               </tr>
             </thead>
 
@@ -49,6 +50,7 @@ function HistoryTable({ invoices }) {
                   <td>{inv.cedente?.partitaIva || "N/A"}</td>
                   <td>{formatCurrency(inv.totale)} €</td>
                   <td>{inv.stato}</td>
+                  <td>{inv.note || "—"}</td>
                 </tr>
               ))}
             </tbody>
