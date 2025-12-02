@@ -1,6 +1,8 @@
 // Colors
 $color-primary: #0057d8;
 $color-primary-hover: #0047b0;
+$color-secondary: #5bc985;
+$color-secondary-hover: #0047b0;
 $color-success: #28a745;
 $color-success-hover: #218838;
 $color-success-light: #4caf50;
@@ -65,9 +67,9 @@ $padding-lg: 2rem;
 $border-radius: 0.5rem;
 
 // Shadows
-$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
-$shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-$shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.08);
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+$shadow-md: 0 4px 6px rgba(0, 0, 0, 0.25);
+$shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.25);
 
 // Transitions
 $transition-fast: 0.2s ease;
