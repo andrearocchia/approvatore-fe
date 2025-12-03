@@ -96,10 +96,12 @@
             tr {
               th {
                 padding: $padding-sm;
-                text-align: center;
+                text-align: left;
                 font-weight: $font-weight;
                 color: $color-text-primary;
                 border-bottom: 2px solid $color-border-light;
+
+                &.actions-th {text-align: center;}
               }
             }
           }
@@ -116,7 +118,7 @@
 
               td {
                 display: table-cell;
-                text-align: center;
+                text-align: left;
                 color: $color-text-secondary;
 
                 &::before {

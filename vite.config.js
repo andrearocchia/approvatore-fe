@@ -7,6 +7,8 @@ export default defineConfig({
     outDir: 'dist',
     emptyOutDir: true,
   },
+
+  // Cancellare in produzione
   server: {
     port: 5173,
     proxy: {

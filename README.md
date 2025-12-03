@@ -1,203 +1,313 @@
-# Sistema di Gestione Fatture - Frontend
+# Documentazione Sistema Gestione Fatture - Frontend
 
-Applicazione React + Vite per la gestione, approvazione, rifiuto e consultazione di fatture in formato XML con autenticazione JWT.
+## Indice
+1. [Panoramica](#panoramica)
+2. [Architettura](#architettura)
+3. [Componenti](#componenti)
+4. [API Client](#api-client)
+5. [Flussi Operativi](#flussi-operativi)
+6. [Configurazione](#configurazione)
 
-## Descrizione
+---
 
-Questo progetto è un sistema completo di frontend per la gestione delle fatture che consente ai dipendenti di:
+## Panoramica
 
-- Autenticarsi tramite login con JWT
-- Visualizzare un elenco completo di fatture
-- Approvare fatture con conferma
-- Rifiutare fatture con motivazione obbligatoria
-- Scaricare i dettagli fatture in formato PDF
-- Gestione automatica della sessione e token scaduti
+Sistema frontend React + Vite per la gestione delle fatture elettroniche con autenticazione JWT. Permette di visualizzare, approvare, rifiutare fatture e consultare lo storico completo.
 
-## Requisiti
+### Funzionalità Principali
+- Autenticazione con JWT
+- Visualizzazione fatture in attesa
+- Approvazione/rifiuto fatture con conferma
+- Download PDF dei dettagli fattura
+- Storico completo delle fatture processate
+- Gestione automatica sessione e token scaduti
 
-- **Node.js**: 14.0.0 o superiore
-- **npm**: 6.0.0 o superiore (oppure yarn)
-- **Backend API**: Server in esecuzione su http://localhost:3000 (configurabile via `.env`)
+---
 
-## Installazione
+## Architettura
 
-1. **Clonare il repository**
-   ```bash
-   git clone <repository-url>
-   cd sistema-fatture-frontend
-   ```
+- **React 18** con hooks
+- **Vite** per build e dev server
+- **SCSS** per gli stili
+- **FontAwesome** per le icone
+- **jwt-decode** per decodifica token JWT
 
-2. **Installare le dipendenze**
-   ```bash
-   npm install
-   ```
+---
 
-3. **Configurare le variabili d'ambiente**
-   
-   Creare un file `.env` nella root del progetto:
-   ```env
-   VITE_API_BASE_URL=http://localhost:3000
-   ```
+## Componenti
 
-4. **Avviare il server di sviluppo**
-   ```bash
-   npm run dev
-   ```
-   
-   L'applicazione sarà disponibile su `http://localhost:5173`
+### App.jsx
+**Componente root** che coordina l'intera applicazione.
 
-## Utilizzo
+**Stati principali:**
+- `user`: informazioni utente autenticato (username, role, token)
+- `invoices`: lista fatture in attesa
+- `historyInvoices`: lista completa fatture processate
+- `showHistory`: toggle tra vista fatture/storico
+- `rejectModal`: gestione apertura modal rifiuto
+- `confirmModal`: gestione apertura modal conferma
 
-### 1️ Login
-- Accedi con le tue credenziali (username e password)
-- Il token JWT viene salvato automaticamente
-- Se il token è già salvato, verrai connesso automaticamente al riavvio
+**Funzionalità:**
+- Caricamento automatico token JWT da localStorage al mount
+- Registrazione callback per logout automatico su 401/403
+- Caricamento fatture dopo login
+- Gestione azioni: approva, rifiuta, visualizza PDF
+- Switch tra vista fatture in attesa e storico
 
-### 2️ Visualizzazione Fatture
-Una volta loggato, visualizzerai la tabella delle fatture con le seguenti informazioni:
-- Numero fattura
-- Data documento
-- Tipo documento
-- Fornitore e P.IVA
-- Totale, Imponibile e IVA
+**Endpoint utilizzati:**
+- `GET /invoices/standby` - fatture in attesa
+- `GET /invoices/all` - storico completo
+- `PATCH /invoices/:id/status` - cambio stato fattura
+- `GET /invoices/:id/pdf` - download PDF
 
-### 3️ Approvazione
-- Clicca il pulsante **✔ (Verde)** sulla riga della fattura
-- Conferma l'approvazione nel modal
-- La fattura verrà rimossa dalla lista e registrata nel backend
+---
 
-### 4️ Rifiuto
-- Clicca il pulsante **✖ (Rosso)** sulla riga della fattura
-- Inserisci la motivazione del rifiuto nella textarea
-- Conferma il rifiuto
-- La fattura verrà rimossa e la motivazione registrata nel backend
+### Login.jsx
+Form di autenticazione utente.
 
-### 5️ Visualizzazione Dettagli
-- Clicca il pulsante **📋 (Blu)** sulla riga della fattura
-- I dettagli verranno generati in formato PDF e aperti in una nuova finestra
-- Potrai scaricare il PDF dal browser
+**Props:**
+- `onLogin`: callback chiamata dopo login riuscito
 
-### 6️ Logout
-- Clicca il pulsante **Logout** in alto a destra
-- Il token verrà rimosso e verrai reindirizzato al login
+**Comportamento:**
+1. Raccoglie username e password
+2. Invia richiesta POST a `/auth/login`
+3. Salva `access_token` in localStorage
+4. Notifica il parent via `onLogin()`
 
-## Struttura del Progetto
+**Gestione errori:**
+- Alert per credenziali non valide
+- Log errori in console
 
+---
+
+### InvoicesTable.jsx
+Tabella responsiva per visualizzare le fatture in attesa di approvazione.
+
+**Props:**
+- `invoices`: array di oggetti fattura
+- `actions`: oggetto con callback
+  - `onApprove(id, numero, cedente)`
+  - `onReject(id)`
+  - `onViewInfo(id)`
+
+**Colonne visualizzate:**
+1. Id (codice unico)
+2. Numero fattura
+3. Data documento
+4. Tipo documento
+5. Nome fornitore
+6. Partita IVA fornitore
+7. Totale (€)
+8. Aliquota IVA (%)
+9. Azioni (info/approva/rifiuta)
+
+**Funzionalità:**
+- Formattazione valuta con 2 decimali
+- Formattazione data in formato italiano
+- Icone interattive per ogni azione
+- Gestione stato vuoto con messaggio
+
+---
+
+### HistoryTable.jsx
+Tabella per visualizzare lo storico completo delle fatture.
+
+**Props:**
+- `invoices`: array completo fatture
+
+**Colonne visualizzate:**
+1. Id
+2. Numero
+3. Data
+4. Tipo documento
+5. Fornitore
+6. P.IVA
+7. Totale
+8. Stato (approvato/rifiutato/standby)
+9. Note (icona blu se presente)
+
+**Caratteristiche:**
+- Evidenziazione riga in base allo stato (classi CSS dinamiche)
+- Icona circolare per indicare presenza note
+- Formattazione identica a InvoicesTable
+
+---
+
+### ConfirmModal.jsx
+Modal di conferma per approvazione fattura.
+
+**Props:**
+- `isOpen`: boolean visibilità
+- `onClose`: callback chiusura
+- `onConfirm`: callback conferma
+- `invoiceNumber`: numero fattura
+- `cedente`: nome fornitore
+
+**Comportamento:**
+- Mostra numero fattura e nome fornitore
+- Richiede conferma esplicita
+- Pulsanti: Annulla / Conferma
+
+---
+
+### RejectModal.jsx
+Modal per rifiuto fattura con motivazione obbligatoria.
+
+**Props:**
+- `isOpen`: boolean visibilità
+- `onClose`: callback chiusura
+- `onConfirm(reason)`: callback con motivazione
+
+**Comportamento:**
+- Textarea per inserimento motivazione
+- Validazione campo non vuoto
+- Pulsante conferma disabilitato se textarea vuota
+- Reset automatico textarea dopo conferma
+
+---
+
+## API Client
+
+### apiClient.js
+Modulo centralizzato per tutte le chiamate HTTP.
+
+**Configurazione:**
+- Base URL da variabile ambiente `VITE_API_BASE_URL`
+- Header `Authorization: Bearer <token>` automatico
+- Header `Content-Type: application/json`
+
+**Funzione principale:**
+```javascript
+apiRequest(endpoint, method = "GET", body = null)
 ```
-src/
-├── components/              # Componenti React
-│   ├── Login/              # Form di autenticazione
-│   │   ├── Login.jsx
-│   │   └── Login.scss
-│   ├── InvoicesTable/      # Tabella fatture con azioni
-│   │   ├── InvoicesTable.jsx
-│   │   └── InvoicesTable.scss
-│   ├── ConfirmModal/       # Modal conferma approvazione
-│   │   ├── ConfirmModal.jsx
-│   │   └── ConfirmModal.scss
-│   └── RejectModal/        # Modal rifiuto con motivazione
-│       ├── RejectModal.jsx
-│       └── RejectModal.scss
-├── api/                     # Client API
-│   └── apiClient.js        # Configurazione richieste HTTP e interceptor JWT
-├── modules/                 # Logica di business
-│   └── invoiceActions.js   # Gestione azioni sulle fatture
-├── App.jsx                 # Componente root
-├── App.scss                # Stili globali
-├── main.jsx                # Entry point
-├── index.css               # CSS reset
-└── .env                    # Configurazione ambiente
-```
+- Aggiunge automaticamente token JWT
+- Gestisce errori 401/403 con callback logout
+- Parse automatico JSON response
+
+**Funzioni esportate:**
+
+**AUTH:**
+- `loginRequest(username, password)` → POST `/auth/login`
+
+**INVOICES:**
+- `getStandByInvoices()` → GET `/invoices/standby`
+- `getAllInvoices()` → GET `/invoices/all`
+- `getInvoiceById(codiceUnico)` → GET `/invoices/:codiceUnico`
+- `getInvoicePdf(codiceUnico)` → GET `/invoices/:codiceUnico/pdf`
+- `updateInvoiceStatus(codiceUnico, stato, note)` → PATCH `/invoices/:codiceUnico/status`
+
+**USERS:**
+- `getUsers()` → GET `/users`
+
+**Gestione errori:**
+- Token scaduto/invalido: chiama `unauthorizedCallback` registrata
+- Altri errori: lancia eccezione con dettagli
+
+---
+
+## Flussi Operativi
+
+### 1. Login
+1. Utente inserisce credenziali in `Login.jsx`
+2. Submit chiama `loginRequest(username, password)`
+3. Backend ritorna `{access_token: "..."}`
+4. Token salvato in localStorage
+5. `onLogin()` notifica `App.jsx`
+6. `App.jsx` decodifica token e imposta stato `user`
+7. `useEffect` carica automaticamente le fatture
+
+### 2. Visualizzazione Fatture
+1. `App.jsx` chiama `getStandByInvoices()`
+2. Backend ritorna array fatture in attesa
+3. Stato `invoices` aggiornato
+4. `InvoicesTable` renderizza la tabella
+5. Ogni riga mostra 3 azioni disponibili
+
+### 3. Approvazione Fattura
+1. Click su icona verde in `InvoicesTable`
+2. `handleApprove(id, numero, cedente)` apre modal
+3. `ConfirmModal` mostra dettagli e chiede conferma
+4. Conferma → `updateInvoiceStatus(id, 'approvato')`
+5. Backend aggiorna stato nel database
+6. Fattura rimossa da lista locale
+7. Modal si chiude
+
+### 4. Rifiuto Fattura
+1. Click su icona rossa in `InvoicesTable`
+2. `handleReject(id)` apre modal
+3. `RejectModal` richiede motivazione
+4. Conferma → `updateInvoiceStatus(id, 'rifiutato', reason)`
+5. Backend salva stato e motivazione
+6. Fattura rimossa da lista locale
+7. Modal si chiude e textarea resettata
+
+### 5. Visualizzazione PDF
+1. Click su icona info blu
+2. `handleViewInfo(id)` chiama `getInvoicePdf(id)`
+3. Backend ritorna `{pdf: "base64string"}`
+4. `openPDFFromBase64()` apre PDF in nuova finestra
+5. Utente può scaricare tramite browser
+
+### 6. Storico Fatture
+1. Click su pulsante "Storico" nell'header
+2. `loadHistoryInvoices()` chiama `getAllInvoices()`
+3. Backend ritorna tutte le fatture (approvate/rifiutate/standby)
+4. Vista cambia da `InvoicesTable` a `HistoryTable`
+5. Pulsante diventa "Fatture" per tornare indietro
+
+### 7. Logout Automatico
+1. Token scaduto durante una richiesta API
+2. Backend risponde 401/403
+3. `apiRequest()` rileva errore
+4. Chiama `unauthorizedCallback` registrata
+5. `handleLogout()` eseguito: rimuove token, resetta user
+6. Redirect automatico a schermata login
+
+---
 
 ## Configurazione
 
-### API Endpoints Richiesti
+### Variabili d'Ambiente (.env)
+```env
+# Sviluppo locale con proxy Vite
+VITE_API_BASE_URL=http://localhost
 
-Il backend deve esporre i seguenti endpoint:
+# Produzione con URL relativo
+# VITE_API_BASE_URL=
+```
 
-| Metodo | Endpoint | Descrizione |
-|--------|----------|-------------|
-| POST | `/api/login` | Autenticazione, ritorna JWT token |
-| GET | `/api/invoices` | Recupera lista fatture (richiede header Authorization) |
-| POST | `/api/invoices/:id/approve` | Approva una fattura |
-| POST | `/api/invoices/:id/reject` | Rifiuta una fattura (con motivazione nel body) |
-| GET | `/api/invoices/:id/pdf` | Genera PDF della fattura |
+### Vite Config (vite.config.js)
+```javascript
+server: {
+  port: 5173,
+  proxy: {
+    '/auth': 'http://localhost',
+    '/users': 'http://localhost',
+    '/invoices': 'http://localhost',
+  }
+}
+```
+**Proxy per sviluppo:** inoltra richieste API al backend su localhost porta 80.
 
-### Formato Token JWT
-
-Il token JWT deve contenere i seguenti claims:
+### Formato JWT Token
+Il token deve contenere:
 ```json
 {
-  "username": "nome_utente",
-  "role": "user_role",
+  "username": "approvatore",
+  "role": "approvatore",
   "iat": 1234567890,
   "exp": 1234571490
 }
 ```
 
-### Variabili d'Ambiente
+### Endpoint Backend Richiesti
 
-- `VITE_API_BASE_URL`: URL base del server backend (default: http://localhost:3000)
-
-## Componenti Principali
-
-### App.jsx
-Componente root che gestisce:
-- Stato globale utente e fatture
-- Ciclo di vita autenticazione e caricamento dati
-- Apertura/chiusura modali
-- Logout automatico se token scade
-
-### Login.jsx
-Form di login che:
-- Raccoglie credenziali utente
-- Invia richiesta autenticazione al backend
-- Salva token JWT in localStorage
-- Notifica il componente padre dopo login riuscito
-
-### InvoicesTable.jsx
-Tabella responsiva che:
-- Visualizza lista fatture con scroll orizzontale
-- Mostra 9 colonne di informazioni
-- Fornisce 3 azioni: visualizza PDF, approva, rifiuta
-- È responsiva su dispositivi mobili
-
-### ConfirmModal.jsx
-Modal di conferma che:
-- Mostra il numero della fattura
-- Chiede conferma prima dell'approvazione
-- Invoca callback al confermadell'azione
-
-### RejectModal.jsx
-Modal di rifiuto che:
-- Raccoglie la motivazione in textarea
-- Valida che il campo sia compilato
-- Invoca callback con la motivazione
-
-## Documentazione Completa
-
-Per la documentazione dettagliata su componenti, flussi di lavoro, API e prossimi sviluppi, consulta:
-**[DOCUMENTATION.md](./DOCUMENTATION.md)**
-
-## Script Disponibili
-
-```bash
-# Avviare server di sviluppo
-npm run dev
-
-# Build per produzione
-npm run build
-
-# Anteprima build di produzione
-npm run preview
-
-# Lint del codice (se configurato)
-npm run lint
-```
-
-## Sicurezza
-
-- Token JWT per autenticazione stateless
-- Validazione token al mount dell'applicazione
-- Logout automatico se token scade
-- Token aggiunto automaticamente all'header Authorization
+| Metodo | Endpoint | Auth | Descrizione |
+|--------|----------|------|-------------|
+| POST | `/auth/login` | No | Login, ritorna access_token |
+| GET | `/invoices/standby` | Sì | Fatture in attesa |
+| GET | `/invoices/all` | Sì | Tutte le fatture |
+| GET | `/invoices/:id` | Sì | Dettaglio singola fattura |
+| GET | `/invoices/:id/pdf` | Sì | PDF fattura (base64) |
+| PATCH | `/invoices/:id/status` | Sì | Aggiorna stato fattura |
+| GET | `/users` | Sì | Lista utenti |

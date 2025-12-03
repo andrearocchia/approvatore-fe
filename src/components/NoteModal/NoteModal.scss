@@ -1,0 +1,28 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.modal-overlay {
+  @include modal-overlay;
+}
+
+.modal-content {
+  @include modal-content;
+}
+
+.note-content {
+  background-color: #f5f5f5;
+  padding: 15px;
+  border-radius: $border-radius;
+  min-height: 100px;
+  max-height: 300px;
+  overflow-y: auto;
+  color: #333;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 15px 0;
+}
+
+.btn-close {
+  @include button-base;
+  background-color: $color-primary;
+}
