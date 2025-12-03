@@ -53,31 +53,40 @@
         }
 
         tbody {
-          display: block;
+          @include flex-center;
+          flex-direction: column;
 
           tr {
-            display: block;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: $spacing-xs;
             background: $color-bg-light;
             border-radius: $border-radius;
             border: 1px solid $color-border;
-            padding: 0.25rem;
-            width: $width-95;
+            padding: $padding-sm;
+            width: $width-80;
             margin-bottom: $spacing-md;
 
             td {
               display: flex;
-              justify-content: space-between;
               align-items: center;
               text-align: left;
               border-bottom: none;
-              color: $color-text-secondary;
+              color: color-text-primary;
 
               &::before {
                 content: attr(data-label);
                 font-weight: $font-weight;
                 color: $color-text-primary;
-                flex: 0 0 40%;
+                margin-right: $spacing-xs;
               }
+
+              // Prima riga: Numero e Data
+              &:nth-child(1) { grid-column: 1; } // Numero
+              &:nth-child(2) { grid-column: 2; } // Data
+
+              // Seconda riga: Fornitore a tutta larghezza
+              &:nth-child(3) { grid-column: 1 / -1; } // Fornitore
             }
           }
         }
@@ -86,6 +95,7 @@
       @media (min-width: 768px) {
         .invoice-table {
           display: table;
+          table-layout: fixed;
 
           thead {
             display: table-header-group;
@@ -102,6 +112,14 @@
                 border-bottom: 2px solid $color-border-light;
 
                 &.actions-th {text-align: center;}
+
+                // Larghezze fisse per uniformità tra tabelle
+                &:nth-child(1) { width: 12%; } // Numero
+                &:nth-child(2) { width: 12%; } // Data
+                &:nth-child(3) { width: 35%; } // Fornitore
+                &:nth-child(4) { width: 12%; } // Totale
+                &:nth-child(5) { width: 12%; } // IVA/Stato
+                &:nth-child(6) { width: 17%; } // Azione/Note
               }
             }
           }
@@ -119,7 +137,7 @@
               td {
                 display: table-cell;
                 text-align: left;
-                color: $color-text-secondary;
+                color: color-text-primary;
 
                 &::before {
                   display: none;

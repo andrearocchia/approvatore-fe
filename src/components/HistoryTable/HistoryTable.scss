@@ -19,7 +19,44 @@
               background-color: rgba($color-alert, 0.15);
             }
 
-            td {padding: $padding-sm;}
+            // Layout mobile specifico per HistoryTable
+            td {
+              // Terza riga: Totale a tutta larghezza
+              &:nth-child(4) { grid-column: 1 / -1; } // Totale
+
+              // Quarta riga: Stato e Note
+              &:nth-child(5) { 
+                grid-column: 1; 
+              } // Stato
+              
+              &:nth-child(6) { 
+                grid-column: 2;
+                justify-content: flex-end;
+                padding: $padding-sm;
+
+                &::before {
+                  content: attr(data-label);
+                  font-weight: $font-weight;
+                  color: $color-text-primary;
+                  margin-right: $spacing-xs;
+                }
+
+                .icon-note {
+                  cursor: pointer;
+                  font-size: $font-medium;
+                }
+              } // Note
+            }
+          }
+        }
+
+        @media (min-width: 768px) {
+          tbody {
+            tr {
+              td {
+                padding: $padding-sm;
+              }
+            }
           }
         }
       }
