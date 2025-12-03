@@ -91,15 +91,12 @@ Tabella responsiva per visualizzare le fatture in attesa di approvazione.
   - `onViewInfo(id)`
 
 **Colonne visualizzate:**
-1. Id (codice unico)
-2. Numero fattura
-3. Data documento
-4. Tipo documento
-5. Nome fornitore
-6. Partita IVA fornitore
-7. Totale (€)
-8. Aliquota IVA (%)
-9. Azioni (info/approva/rifiuta)
+1. Numero fattura
+2. Data documento
+3. Nome fornitore
+4. Totale (€)
+5. Aliquota IVA (%)
+6. Azioni (info/approva/rifiuta)
 
 **Funzionalità:**
 - Formattazione valuta con 2 decimali
@@ -116,15 +113,12 @@ Tabella per visualizzare lo storico completo delle fatture.
 - `invoices`: array completo fatture
 
 **Colonne visualizzate:**
-1. Id
-2. Numero
-3. Data
-4. Tipo documento
-5. Fornitore
-6. P.IVA
-7. Totale
-8. Stato (approvato/rifiutato/standby)
-9. Note (icona blu se presente)
+1. Numero fattura
+2. Data documento
+3. Nome fornitore
+4. Totale (€)
+5. Stato (approvato/rifiutato/standby)
+6. Note (icona blu se presente)
 
 **Caratteristiche:**
 - Evidenziazione riga in base allo stato (classi CSS dinamiche)
