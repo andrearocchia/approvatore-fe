@@ -6,15 +6,5 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
-  },
-
-  // Cancellare in produzione
-  server: {
-    port: 5173,
-    proxy: {
-      '/auth': 'http://localhost',
-      '/users': 'http://localhost',
-      '/invoices': 'http://localhost',
-    }
   }
 })
