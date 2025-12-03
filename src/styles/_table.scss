@@ -66,10 +66,12 @@
             padding: $padding-sm;
             width: $width-80;
             margin-bottom: $spacing-md;
+            box-shadow: $shadow-lg;
 
             td {
-              display: flex;
-              align-items: center;
+              @include flex-center;
+              justify-content: flex-start;
+              flex-wrap: wrap;
               text-align: left;
               border-bottom: none;
               color: color-text-primary;
@@ -87,6 +89,14 @@
 
               // Seconda riga: Fornitore a tutta larghezza
               &:nth-child(3) { grid-column: 1 / -1; } // Fornitore
+
+              &:nth-child(4) {   
+                &.totale {
+                  font-weight: $font-weight;
+                  color: $color-text-primary;
+                  margin-right: $spacing-xs;
+                }
+              } // Totale
             }
           }
         }
@@ -133,6 +143,7 @@
               border-radius: 0;
               padding: 0;
               margin-bottom: 0;
+              box-shadow: none;
 
               td {
                 display: table-cell;

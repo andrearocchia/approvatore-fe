@@ -176,6 +176,7 @@ export default function App() {
             <div className="button-room">
               {showHistory ? (
                 <button
+                  title='Visualizza fatture da elaborare'
                   className="back-button"
                   onClick={() => setShowHistory(false)}>
                   <FontAwesomeIcon icon={faList} />
@@ -183,6 +184,7 @@ export default function App() {
                 </button>
               ) : (
                 <button
+                  title='Visualizza storico fatture'
                   className="invoice-history"
                   onClick={() => {
                     setShowHistory(true);

@@ -10,7 +10,7 @@
             td.actions-cell {
               justify-content: center;
               gap: $spacing-md;
-              flex-wrap: wrap;
+              flex-wrap: nowrap;
 
               &::before {
                 display: none;

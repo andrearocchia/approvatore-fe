@@ -51,11 +51,11 @@ function HistoryTable({ invoices }) {
               {invoices.map((inv) => (
                 <tr key={inv.id} className={`row-status-${inv.stato}`}>
                   {/*<td data-label="Codice Unico">{inv.id}</td>*/}
-                  <td data-label="Numero">{inv.numero || "—"}</td>
-                  <td data-label="Data">{inv.data ? new Date(inv.data).toLocaleDateString("it-IT") : "—"}</td>
-                  <td data-label="Fornitore">{inv.cedente?.nome || "N/A"}</td>
-                  <td data-label="Totale">{formatCurrency(inv.totale)} €</td>
-                  <td data-label="Stato">{inv.stato}</td>
+                  <td data-label="Numero:">{inv.numero || "—"}</td>
+                  <td data-label="Data:">{inv.data ? new Date(inv.data).toLocaleDateString("it-IT") : "—"}</td>
+                  <td data-label="Fornitore:">{inv.cedente?.nome || "N/A"}</td>
+                  <td data-label="Totale:" className='totale'>{formatCurrency(inv.totale)} €</td>
+                  <td data-label="Stato:">{inv.stato}</td>
                   <td 
                     data-label="Note" 
                     onClick={() => handleNoteClick(inv.note)}

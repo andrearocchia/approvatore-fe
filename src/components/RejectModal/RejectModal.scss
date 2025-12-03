@@ -1,36 +1,41 @@
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
-// Includo gli stili comuni dei modali definiti in styles/_modals.scss
 .modal-overlay {
   @include modal-overlay;
 }
 
 .modal-content {
   @include modal-content;
-}
 
-.btn-cancel,
-.btn-confirm {
-  @include button-base;
+  .modal-textarea {
+    background: transparent;
+    font-family: $font-family-primary;
+    resize: none;
+    color: black;
+    height: 120px;
+    padding: 10px;
+    border-radius: $border-radius;
+    width: 95%;
 
-  &.reject-modal {
-    background-color: $color-danger-light;
-
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+    &:focus-visible {
+      outline: 0;
     }
   }
-}
 
-.modal-textarea {
-  background: transparent;
-  font-family: $font-family-primary;
-  resize: none;
-  color: black;
-  height: 120px;
-  padding: 10px;
-  border-radius: $border-radius;
-  width: 95%;
+  .modal-actions {
+    .btn-cancel,
+    .btn-confirm {
+      @include button-base;
+
+      &.reject-modal {
+        background-color: $color-danger-light;
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
 }

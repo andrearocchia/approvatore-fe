@@ -19,7 +19,6 @@
               background-color: rgba($color-alert, 0.15);
             }
 
-            // Layout mobile specifico per HistoryTable
             td {
               // Terza riga: Totale a tutta larghezza
               &:nth-child(4) { grid-column: 1 / -1; } // Totale
@@ -31,8 +30,6 @@
               
               &:nth-child(6) { 
                 grid-column: 2;
-                justify-content: flex-end;
-                padding: $padding-sm;
 
                 &::before {
                   content: attr(data-label);

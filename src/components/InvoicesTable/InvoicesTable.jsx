@@ -38,11 +38,11 @@ function InvoicesTable({ invoices, actions }) {
               {invoices.map(inv => (
                 <tr key={inv.id}>
                   {/*<td data-label="Codice Unico">{inv.id}</td>*/}
-                  <td data-label="Numero">{inv.numero || '—'}</td>
-                  <td data-label="Data">{inv.data ? new Date(inv.data).toLocaleDateString('it-IT') : '—'}</td>
-                  <td data-label="Fornitore">{inv.cedente?.nome || 'N/A'}</td>
-                  <td data-label="Totale">{formatCurrency(inv.totale)} €</td>
-                  <td data-label="IVA">{inv.aliquota ? `${formatCurrency(inv.aliquota)}%` : '—'}</td>
+                  <td data-label="Numero:">{inv.numero || '—'}</td>
+                  <td data-label="Data:">{inv.data ? new Date(inv.data).toLocaleDateString('it-IT') : '—'}</td>
+                  <td data-label="Fornitore:">{inv.cedente?.nome || 'N/A'}</td>
+                  <td data-label="Totale:" className='totale'>{formatCurrency(inv.totale)} €</td>
+                  <td data-label="IVA:">{inv.aliquota ? `${formatCurrency(inv.aliquota)}%` : '—'}</td>
                   <td className="actions-cell">
                     <FontAwesomeIcon
                       icon={faInfo}

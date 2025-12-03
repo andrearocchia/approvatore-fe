@@ -24,11 +24,16 @@
 
       .button-room {
         display: flex;
-        gap: 0.5rem;
+        gap: 1rem;
+
+        @media (min-width: 768px) {
+          gap: 0.5rem;
+        }
 
         .app-logout, .invoice-history, .back-button {
           border: none;
-          border-radius: $border-radius;
+          border-radius: 50%;
+          padding: 10px;
           cursor: pointer;
           background: $color-danger-light;
         
@@ -37,6 +42,9 @@
           }
 
           @media (min-width: 768px) {
+            border-radius: $border-radius;
+            padding: 0.5rem 1rem;
+
             span {
               display: inline;
               margin-left: $spacing-xs;
