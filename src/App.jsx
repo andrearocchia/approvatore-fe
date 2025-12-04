@@ -3,7 +3,7 @@ import { jwtDecode } from 'jwt-decode';
 import { 
   registerUnauthorizedCallback, 
   getStandByInvoices, 
-  getAllInvoices,
+  getProcessedInvoices,
   getInvoicePdf, 
   updateInvoiceStatus 
 } from "./api/apiClient";
@@ -104,7 +104,7 @@ export default function App() {
   const loadHistoryInvoices = async () => {
     setLoading(true);
     try {
-      const result = await getAllInvoices();
+      const result = await getProcessedInvoices();
       if (result.success) {
         setHistoryInvoices(result.invoices);
       }
@@ -171,7 +171,7 @@ export default function App() {
       <header className="app-header">
         {user && (
           <div className="app-user">
-            <span className="app-username">Ciao, {user.username}</span>
+            <span className="app-username">Buongiorno, {user.username}</span>
 
             <div className="button-room">
               {showHistory ? (

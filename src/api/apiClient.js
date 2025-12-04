@@ -62,6 +62,10 @@ export function getAllInvoices() {
   return apiRequest("/invoices/all");
 }
 
+export function getProcessedInvoices() {
+  return apiRequest("/invoices/processed");
+}
+
 export function getInvoiceById(codiceUnico) {
   return apiRequest(`/invoices/${codiceUnico}`);
 }
