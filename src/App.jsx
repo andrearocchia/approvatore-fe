@@ -137,9 +137,9 @@ export default function App() {
     setConfirmModal({ isOpen: true, invoiceId, invoiceNumber, cedente });
   };
 
-  const handleConfirmApprove = async () => {
+  const handleConfirmApprove = async (note) => {
     try {
-      await updateInvoiceStatus(confirmModal.invoiceId, 'approvato');
+      await updateInvoiceStatus(confirmModal.invoiceId, 'approvato', note);
       removeInvoice(confirmModal.invoiceId);
       setConfirmModal({ isOpen: false, invoiceId: null, invoiceNumber: null, cedente: null });
     } catch {
