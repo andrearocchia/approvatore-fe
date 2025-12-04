@@ -4,12 +4,6 @@ import { faCheck, faTimes, faInfo } from '@fortawesome/free-solid-svg-icons';
 import './InvoicesTable.scss';
 
 function InvoicesTable({ invoices, actions }) {
-  const formatCurrency = (value) => {
-    if (!value) return '0.00';
-    const num = typeof value === 'string' ? parseFloat(value) : value;
-    return isNaN(num) ? '0.00' : num.toFixed(2);
-  };
-
   return (
     <div className="table-page">
       <div className="table-container">
@@ -40,7 +34,7 @@ function InvoicesTable({ invoices, actions }) {
                   <td data-label="Numero:">{inv.numero || '—'}</td>
                   <td data-label="Data:">{inv.data ? new Date(inv.data).toLocaleDateString('it-IT') : '—'}</td>
                   <td data-label="Fornitore:">{inv.cedente?.nome || 'N/A'}</td>
-                  <td data-label="Totale:" className='totale'>{formatCurrency(inv.totale)} €</td>
+                  <td data-label="Totale:" className='totale'>{inv.totale || '—'}</td>
                   <td className="actions-cell">
                     <FontAwesomeIcon
                       icon={faInfo}
