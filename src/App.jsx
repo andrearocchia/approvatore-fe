@@ -9,9 +9,10 @@ import {
 } from "./api/apiClient";
 
 import { openPDFFromBase64 } from './utils/pdfUtils';
+import { applyFilters } from './utils/filterUtils';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faClock, faList } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faClock, faList, faFilter } from '@fortawesome/free-solid-svg-icons';
 
 import Login from './components/Login/Login';
 import InvoicesTable from './components/InvoicesTable/InvoicesTable';
@@ -19,6 +20,7 @@ import HistoryTable from './components/HistoryTable/HistoryTable';
 
 import RejectModal from './components/RejectModal/RejectModal';
 import ConfirmModal from './components/ConfirmModal/ConfirmModal';
+import FilterModal from './components/FilterModal/FilterModal';
 
 import './App.scss';
 
@@ -29,6 +31,13 @@ export default function App() {
   const [loading, setLoading] = useState(false);
 
   const [showHistory, setShowHistory] = useState(false);
+  const [filters, setFilters] = useState({
+    dataInizio: '',
+    dataFine: '',
+    fornitore: '',
+    stato: 'tutti'
+  });
+  const [showFilterModal, setShowFilterModal] = useState(false);
 
   const [rejectModal, setRejectModal] = useState({
     isOpen: false,
@@ -160,11 +169,19 @@ export default function App() {
     }
   };
 
+  const handleApplyFilters = (newFilters) => {
+    setFilters(newFilters);
+  };
+
   const invoiceActions = {
     onApprove: handleApprove,
     onReject: handleReject,
     onViewInfo: handleViewInfo,
   };
+
+  const filteredInvoices = showHistory 
+    ? applyFilters(historyInvoices, filters)
+    : applyFilters(invoices, filters);
 
   return (
     <div className="app-container">
@@ -194,6 +211,14 @@ export default function App() {
                   <span className="invoice-history-text">Storico</span>
                 </button>
               )}
+              {/* Filtro */}
+              <button
+                title='Filtra fatture'
+                className="filter-button"
+                onClick={() => setShowFilterModal(true)}>
+                <FontAwesomeIcon icon={faFilter} />
+                <span className="filter-text">Filtra</span>
+              </button>
 
               {/* Logout */}
               <button className="app-logout" onClick={handleLogout}>
@@ -215,12 +240,12 @@ export default function App() {
           </div>
         ) : showHistory ? (
           <HistoryTable
-            invoices={historyInvoices}
+            invoices={filteredInvoices}
             onBack={() => setShowHistory(false)}
           />
         ) : (
           <>
-            <InvoicesTable invoices={invoices} actions={invoiceActions} />
+            <InvoicesTable invoices={filteredInvoices} actions={invoiceActions} />
 
             <ConfirmModal
               isOpen={confirmModal.isOpen}
@@ -240,6 +265,13 @@ export default function App() {
           </>
         )}
       </main>
+
+      <FilterModal
+        isOpen={showFilterModal}
+        onClose={() => setShowFilterModal(false)}
+        onApply={handleApplyFilters}
+        showStatoFilter={showHistory}
+      />
     </div>
   );
 }
