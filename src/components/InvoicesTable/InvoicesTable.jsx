@@ -23,7 +23,6 @@ function InvoicesTable({ invoices, actions }) {
                 <th>Data</th>
                 <th>Fornitore</th>
                 <th>Totale</th>
-                <th>IVA</th>
                 <th className="actions-th">Azione</th>
               </tr>
             </thead>
@@ -42,7 +41,6 @@ function InvoicesTable({ invoices, actions }) {
                   <td data-label="Data:">{inv.data ? new Date(inv.data).toLocaleDateString('it-IT') : '—'}</td>
                   <td data-label="Fornitore:">{inv.cedente?.nome || 'N/A'}</td>
                   <td data-label="Totale:" className='totale'>{formatCurrency(inv.totale)} €</td>
-                  <td data-label="IVA:">{inv.aliquota ? `${formatCurrency(inv.aliquota)}%` : '—'}</td>
                   <td className="actions-cell">
                     <FontAwesomeIcon
                       icon={faInfo}
