@@ -261,15 +261,6 @@ apiRequest(endpoint, method = "GET", body = null)
 
 ## Configurazione
 
-### Variabili d'Ambiente (.env)
-```env
-# Sviluppo locale con proxy Vite
-VITE_API_BASE_URL=http://localhost
-
-# Produzione con URL relativo
-# VITE_API_BASE_URL=
-```
-
 ### Vite Config (vite.config.js)
 ```javascript
 server: {
