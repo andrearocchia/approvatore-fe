@@ -70,8 +70,11 @@ export function getInvoiceById(codiceUnico) {
   return apiRequest(`/invoices/${codiceUnico}`);
 }
 
-export function getInvoicePdf(codiceUnico) {
-  return apiRequest(`/invoices/${codiceUnico}/pdf`);
+/**
+ * Restituisce l'URL del PDF per aprirlo direttamente
+ */
+export function getInvoicePdfUrl(codiceUnico) {
+  return `${API_BASE_URL}/invoices/${codiceUnico}/pdf`;
 }
 
 export function updateInvoiceStatus(codiceUnico, stato, note) {

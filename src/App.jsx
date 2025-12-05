@@ -4,11 +4,10 @@ import {
   registerUnauthorizedCallback, 
   getStandByInvoices, 
   getProcessedInvoices,
-  getInvoicePdf, 
+  getInvoicePdfUrl, 
   updateInvoiceStatus 
 } from "./api/apiClient";
 
-import { openPDFFromBase64 } from './utils/pdfUtils';
 import { applyFilters, hasActiveFilters } from './utils/filterUtils';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -156,17 +155,9 @@ export default function App() {
     }
   };
 
-  const handleViewInfo = async (invoiceId) => {
-    try {
-      const result = await getInvoicePdf(invoiceId);
-      if (result.success && result.pdf) {
-        openPDFFromBase64(result.pdf);
-      } else {
-        alert("PDF non disponibile");
-      }
-    } catch {
-      alert("Errore nel recupero del PDF");
-    }
+  const handleViewInfo = (invoiceId) => {
+    const pdfUrl = getInvoicePdfUrl(invoiceId);
+    window.open(pdfUrl, '_blank');
   };
 
   const handleApplyFilters = (newFilters) => {
