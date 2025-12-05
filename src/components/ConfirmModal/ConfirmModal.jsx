@@ -7,7 +7,8 @@ export default function ConfirmModal({ isOpen, onClose, onConfirm, invoiceNumber
   if (!isOpen) return null;
 
   const handleConfirm = () => {
-    onConfirm(note.trim() || null);
+    const trimmedNote = note.trim();
+    onConfirm(trimmedNote || undefined);
     setNote('');
     onClose();
   };
