@@ -3,11 +3,18 @@ import { faCheck, faTimes, faInfo } from '@fortawesome/free-solid-svg-icons';
 
 import './InvoicesTable.scss';
 
-function InvoicesTable({ invoices, actions }) {
+function InvoicesTable({ invoices, actions, isFiltersActive, onResetFilters }) {
   return (
     <div className="table-page">
       <div className="table-container">
-        <h2 className="table-title">Fatture in Attesa</h2>
+        <div className="table-header">
+          <h2 className="table-title">Fatture in Attesa</h2>
+          <button 
+            className={`btn-reset-filters ${isFiltersActive ? 'visible' : ''}`}
+            onClick={onResetFilters}
+          >Resetta
+          </button>
+        </div>
         <div className="table-scroll">
           <table className="invoice-table">
             <thead>

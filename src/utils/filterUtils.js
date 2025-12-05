@@ -1,16 +1,17 @@
 export const applyFilters = (invoices, filters) => {
   return invoices.filter(invoice => {
     // Filtro per data
-    if (filters.dataInizio) {
-      const invoiceDate = new Date(invoice.data);
-      const filterDate = new Date(filters.dataInizio);
-      if (invoiceDate < filterDate) return false;
+    if (filters.data) {
+      const invoiceDate = new Date(invoice.data).toDateString();
+      const filterDate = new Date(filters.data).toDateString();
+      if (invoiceDate !== filterDate) return false;
     }
-    
-    if (filters.dataFine) {
-      const invoiceDate = new Date(invoice.data);
-      const filterDate = new Date(filters.dataFine);
-      if (invoiceDate > filterDate) return false;
+
+    // Filtro per numero fattura
+    if (filters.numeroFattura && filters.numeroFattura.trim() !== '') {
+      const numeroFattura = invoice.numero?.toLowerCase() || '';
+      const filterNumero = filters.numeroFattura.toLowerCase();
+      if (!numeroFattura.includes(filterNumero)) return false;
     }
 
     // Filtro per fornitore
@@ -34,4 +35,11 @@ export const getUniqueSuppliers = (invoices) => {
     .map(inv => inv.cedente?.nome)
     .filter(Boolean);
   return [...new Set(suppliers)].sort();
+};
+
+export const hasActiveFilters = (filters) => {
+  return filters.data !== '' || 
+    filters.numeroFattura !== '' || 
+    filters.fornitore !== '' || 
+    (filters.stato && filters.stato !== 'tutti');
 };

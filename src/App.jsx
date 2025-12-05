@@ -9,7 +9,7 @@ import {
 } from "./api/apiClient";
 
 import { openPDFFromBase64 } from './utils/pdfUtils';
-import { applyFilters } from './utils/filterUtils';
+import { applyFilters, hasActiveFilters } from './utils/filterUtils';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faClock, faList, faFilter } from '@fortawesome/free-solid-svg-icons';
@@ -32,8 +32,8 @@ export default function App() {
 
   const [showHistory, setShowHistory] = useState(false);
   const [filters, setFilters] = useState({
-    dataInizio: '',
-    dataFine: '',
+    data: '',
+    numeroFattura: '',
     fornitore: '',
     stato: 'tutti'
   });
@@ -173,6 +173,16 @@ export default function App() {
     setFilters(newFilters);
   };
 
+  const handleResetFilters = () => {
+    const resetFilters = {
+      data: '',
+      numeroFattura: '',
+      fornitore: '',
+      stato: 'tutti'
+    };
+    setFilters(resetFilters);
+  };
+
   const invoiceActions = {
     onApprove: handleApprove,
     onReject: handleReject,
@@ -182,6 +192,8 @@ export default function App() {
   const filteredInvoices = showHistory 
     ? applyFilters(historyInvoices, filters)
     : applyFilters(invoices, filters);
+
+  const isFiltersActive = hasActiveFilters(filters);
 
   return (
     <div className="app-container">
@@ -242,10 +254,17 @@ export default function App() {
           <HistoryTable
             invoices={filteredInvoices}
             onBack={() => setShowHistory(false)}
+            isFiltersActive={isFiltersActive}
+            onResetFilters={handleResetFilters}
           />
         ) : (
           <>
-            <InvoicesTable invoices={filteredInvoices} actions={invoiceActions} />
+            <InvoicesTable 
+              invoices={filteredInvoices} 
+              actions={invoiceActions}
+              isFiltersActive={isFiltersActive}
+              onResetFilters={handleResetFilters}
+            />
 
             <ConfirmModal
               isOpen={confirmModal.isOpen}

@@ -16,11 +16,13 @@ export default function ConfirmModal({ isOpen, onClose, onConfirm, invoiceNumber
     <div className="modal-overlay">
       <div className="modal-content">
         <h3>Conferma approvazione</h3>
-        <p>Approvare la fattura <strong>{invoiceNumber}</strong></p>
-        <p>Fornitore: <strong>{cedente || 'N/A'}</strong></p>
+        <div className='details'>
+          <p>Fattura numero: <strong>{invoiceNumber}</strong></p>
+          <p>Fornitore: <strong>{cedente || 'N/A'}</strong></p>
+        </div>
         <textarea
           className="modal-textarea"
-          placeholder="Note (facoltative)..."
+          placeholder="Note (facoltative)"
           value={note}
           onChange={(e) => setNote(e.target.value)}
         />

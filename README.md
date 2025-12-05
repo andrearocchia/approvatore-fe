@@ -166,7 +166,6 @@ Modal per rifiuto fattura con motivazione obbligatoria.
 Modulo centralizzato per tutte le chiamate HTTP.
 
 **Configurazione:**
-- Base URL da variabile ambiente `VITE_API_BASE_URL`
 - Header `Authorization: Bearer <token>` automatico
 - Header `Content-Type: application/json`
 

@@ -8,12 +8,39 @@
     box-shadow: $shadow-sm;
     padding: $padding;
 
-    .table-title {
-      @include flex-center;
-      font-size: $font-title;
-      color: $color-primary;
-      text-transform: uppercase;
+    .table-header {
+      @include flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: $spacing-lg;
+
+      .table-title {
+        font-size: $font-title;
+        color: $color-primary;
+        text-transform: uppercase;
+      }
+
+      .btn-reset-filters {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(10px);
+        transition: all 0.3s ease;
+        
+        background-color: $color-bg-gray;
+        color: $color-text-secondary;
+        cursor: pointer;
+
+        &.visible {
+          opacity: 1;
+          visibility: visible;
+          transform: translateX(0);
+        }
+
+        &:hover {
+          background-color: $color-bg-cancel;
+          color: $color-bg-white;
+        }
+      }
     }
 
     .table-scroll {

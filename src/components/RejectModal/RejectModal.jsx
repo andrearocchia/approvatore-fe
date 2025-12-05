@@ -18,7 +18,7 @@ export default function RejectModal({ isOpen, onClose, onConfirm }) {
         <h3>Motivazione rifiuto</h3>
         <textarea
           className="modal-textarea"
-          placeholder="Inserisci la motivazione del rifiuto..."
+          placeholder="Inserire la motivazione del rifiuto"
           value={reason}
           onChange={(e) => setReason(e.target.value)}
         />

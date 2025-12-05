@@ -18,12 +18,20 @@
     color: $color-text-primary;
   }
 
-  p {
-    margin: 0 0 $spacing-lg 0;
-    color: $color-text-muted;
-    font-size: $font-size;
-  }
+  .details {
+    @include flex;
+    flex-direction: column;
+    border-top: 1px solid $color-border;
 
+    p {
+      @include flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      width: $width-80;
+      color: $color-text-muted;
+    }
+  }
+  
   .modal-actions {
     display: flex;
     justify-content: flex-end;

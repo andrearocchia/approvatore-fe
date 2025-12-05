@@ -4,7 +4,7 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import NoteModal from '../NoteModal/NoteModal';
 import "./HistoryTable.scss";
 
-function HistoryTable({ invoices }) {
+function HistoryTable({ invoices, isFiltersActive, onResetFilters }) {
   const [noteModal, setNoteModal] = useState({
     isOpen: false,
     note: null,
@@ -19,8 +19,14 @@ function HistoryTable({ invoices }) {
   return (
     <div className="table-page">
       <div className="table-container">
-        <h2 className="table-title">Storico Fatture</h2>
-
+        <div className="table-header">
+          <h2 className="table-title">Storico Fatture</h2>
+          <button 
+            className={`btn-reset-filters ${isFiltersActive ? 'visible' : ''}`}
+            onClick={onResetFilters}
+          >Resetta
+          </button>
+        </div>
         <div className="table-scroll">
           <table className="invoice-table">
             <thead>

@@ -5,8 +5,8 @@ import './FilterModal.scss';
 
 function FilterModal({ isOpen, onClose, onApply, showStatoFilter = false }) {
   const [filters, setFilters] = useState({
-    dataInizio: '',
-    dataFine: '',
+    data: '',
+    numeroFattura: '',
     fornitore: '',
     stato: 'tutti'
   });
@@ -14,8 +14,8 @@ function FilterModal({ isOpen, onClose, onApply, showStatoFilter = false }) {
   useEffect(() => {
     if (!isOpen) {
       setFilters({
-        dataInizio: '',
-        dataFine: '',
+        data: '',
+        numeroFattura: '',
         fornitore: '',
         stato: 'tutti'
       });
@@ -24,18 +24,6 @@ function FilterModal({ isOpen, onClose, onApply, showStatoFilter = false }) {
 
   const handleApply = () => {
     onApply(filters);
-    onClose();
-  };
-
-  const handleReset = () => {
-    const resetFilters = {
-      dataInizio: '',
-      dataFine: '',
-      fornitore: '',
-      stato: 'tutti'
-    };
-    setFilters(resetFilters);
-    onApply(resetFilters);
     onClose();
   };
 
@@ -53,20 +41,21 @@ function FilterModal({ isOpen, onClose, onApply, showStatoFilter = false }) {
 
         <div className="modal-body">
           <div className="filter-group">
-            <label>Data Inizio:</label>
+            <label>Data:</label>
             <input
               type="date"
-              value={filters.dataInizio}
-              onChange={(e) => setFilters({ ...filters, dataInizio: e.target.value })}
+              value={filters.data}
+              onChange={(e) => setFilters({ ...filters, data: e.target.value })}
             />
           </div>
 
           <div className="filter-group">
-            <label>Data Fine:</label>
+            <label>Numero Fattura:</label>
             <input
-              type="date"
-              value={filters.dataFine}
-              onChange={(e) => setFilters({ ...filters, dataFine: e.target.value })}
+              type="text"
+              placeholder="Cerca numero fattura..."
+              value={filters.numeroFattura}
+              onChange={(e) => setFilters({ ...filters, numeroFattura: e.target.value })}
             />
           </div>
 
@@ -96,9 +85,6 @@ function FilterModal({ isOpen, onClose, onApply, showStatoFilter = false }) {
         </div>
 
         <div className="modal-footer">
-          <button className="btn-reset" onClick={handleReset}>
-            Resetta
-          </button>
           <button className="btn-apply" onClick={handleApply}>
             Applica
           </button>
