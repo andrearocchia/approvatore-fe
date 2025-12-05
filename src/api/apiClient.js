@@ -22,7 +22,7 @@ export async function apiRequest(endpoint, method = "GET", body = null) {
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+  const response = await fetch(`${endpoint}`, {
     method,
     headers,
     body: body ? JSON.stringify(body) : null,
@@ -74,7 +74,7 @@ export function getInvoiceById(codiceUnico) {
  * Restituisce l'URL del PDF per aprirlo direttamente
  */
 export function getInvoicePdfUrl(codiceUnico) {
-  return `${API_BASE_URL}/invoices/${codiceUnico}/pdf`;
+  return `/invoices/${codiceUnico}/pdf`;
 }
 
 export function updateInvoiceStatus(codiceUnico, stato, note) {
