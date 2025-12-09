@@ -10,7 +10,6 @@
 
     .table-header {
       @include flex;
-      justify-content: space-between;
       align-items: center;
       margin-bottom: $spacing-lg;
 
@@ -25,6 +24,7 @@
         visibility: hidden;
         transform: translateX(10px);
         transition: all 0.3s ease;
+        margin-left: -5rem;
         
         background-color: $color-bg-gray;
         color: $color-text-secondary;
@@ -34,6 +34,7 @@
           opacity: 1;
           visibility: visible;
           transform: translateX(0);
+          margin-left: 5rem;
         }
 
         &:hover {
@@ -151,12 +152,12 @@
                 &.actions-th {text-align: center;}
 
                 // Larghezze fisse per uniformità tra tabelle
-                &:nth-child(1) { width: 12%; } // Numero
-                &:nth-child(2) { width: 12%; } // Data
-                &:nth-child(3) { width: 35%; } // Fornitore
-                &:nth-child(4) { width: 12%; } // Totale
-                &:nth-child(5) { width: 12%; } // IVA/Stato
-                &:nth-child(6) { width: 17%; } // Azione/Note
+                &:nth-child(1) { width: 15%; } // Numero
+                &:nth-child(2) { width: 15%; } // Data
+                &:nth-child(3) { width: 40%; } // Fornitore
+                &:nth-child(4) { width: 15%; } // Totale
+                &:nth-child(5) { width: 15%; } // IVA/Stato
+                &:nth-child(6) { width: 15%; } // Azione/Note
               }
             }
           }

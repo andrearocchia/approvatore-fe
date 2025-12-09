@@ -85,9 +85,7 @@ function FilterModal({ isOpen, onClose, onApply, showStatoFilter = false }) {
         </div>
 
         <div className="modal-footer">
-          <button className="btn-apply" onClick={handleApply}>
-            Applica
-          </button>
+          <button className="btn-apply" onClick={handleApply}>Applica</button>
         </div>
       </div>
     </div>
