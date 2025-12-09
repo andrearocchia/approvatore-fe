@@ -96,9 +96,11 @@ export default function App() {
   }, [user]);
 
   const loadInvoices = async () => {
+    if (!user?.username) return;
+    
     setLoading(true);
     try {
-      const result = await getStandByInvoices();
+      const result = await getStandByInvoices(user.username);
       if (result.success) {
         setInvoices(result.invoices);
       }

@@ -54,8 +54,8 @@ export function loginRequest(username, password) {
 // ============================
 // INVOICES
 // ============================
-export function getStandByInvoices() {
-  return apiRequest("/invoices/standby");
+export function getStandByInvoices(username) {
+  return apiRequest(`/invoices/standby/${username}`);
 }
 
 export function getAllInvoices() {
