@@ -23,12 +23,15 @@
               // Terza riga: Totale a tutta larghezza
               &:nth-child(4) { grid-column: 1 / -1; } // Totale
 
-              // Quarta riga: Stato e Note
-              &:nth-child(5) { 
+              // Quarta riga: Data elaborazione a tutta larghezza
+              &:nth-child(5) { grid-column: 1 / -1; } // Data elaborazione
+
+              // Quinta riga: Stato e Note
+              &:nth-child(6) { 
                 grid-column: 2 / -1;
               } // Stato
               
-              &:nth-child(6) { 
+              &:nth-child(7) { 
                 grid-column: 2;
 
                 &::before {

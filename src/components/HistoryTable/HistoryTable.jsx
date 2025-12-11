@@ -31,11 +31,11 @@ function HistoryTable({ invoices, isFiltersActive, onResetFilters }) {
           <table className="invoice-table">
             <thead>
               <tr>
-                 {/*<th>Id</th>*/}
                 <th>Numero</th>
                 <th>Data</th>
                 <th>Fornitore</th>
                 <th>Totale</th>
+                <th>Data elaborazione</th>
                 <th>Stato</th>
                 <th>Note</th>
               </tr>
@@ -43,18 +43,18 @@ function HistoryTable({ invoices, isFiltersActive, onResetFilters }) {
             <tbody>
               {invoices.length === 0 && (
                 <tr>
-                  <td colSpan="8" style={{ textAlign: "center", padding: "20px" }}>
+                  <td colSpan="7" style={{ textAlign: "center", padding: "20px" }}>
                     Nessuna fattura trovata nello storico
                   </td>
                 </tr>
               )}
               {invoices.map((inv) => (
                 <tr key={inv.id} className={`row-status-${inv.stato}`}>
-                  {/*<td data-label="Codice Unico">{inv.id}</td>*/}
                   <td data-label="Numero:">{inv.numero || "—"}</td>
                   <td data-label="Data:">{inv.data ? new Date(inv.data).toLocaleDateString("it-IT") : "—"}</td>
                   <td data-label="Fornitore:">{inv.cedente?.nome || "N/A"}</td>
                   <td data-label="Totale:" className='totale'>{inv.totale || "—"}</td>
+                  <td data-label="Data elaborazione:">{inv.updatedAt ? new Date(inv.updatedAt).toLocaleDateString("it-IT") : "—"}</td>
                   <td data-label="Stato:">{inv.stato}</td>
                   <td 
                     data-label="Note" 
