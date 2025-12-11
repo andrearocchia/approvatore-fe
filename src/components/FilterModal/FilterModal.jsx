@@ -5,7 +5,8 @@ import './FilterModal.scss';
 
 function FilterModal({ isOpen, onClose, onApply, showStatoFilter = false }) {
   const [filters, setFilters] = useState({
-    data: '',
+    dataDa: '',
+    dataA: '',
     numeroFattura: '',
     fornitore: '',
     stato: 'tutti'
@@ -14,7 +15,8 @@ function FilterModal({ isOpen, onClose, onApply, showStatoFilter = false }) {
   useEffect(() => {
     if (!isOpen) {
       setFilters({
-        data: '',
+        dataDa: '',
+        dataA: '',
         numeroFattura: '',
         fornitore: '',
         stato: 'tutti'
@@ -41,11 +43,20 @@ function FilterModal({ isOpen, onClose, onApply, showStatoFilter = false }) {
 
         <div className="modal-body">
           <div className="filter-group">
-            <label>Data:</label>
+            <label>Data Da:</label>
             <input
               type="date"
-              value={filters.data}
-              onChange={(e) => setFilters({ ...filters, data: e.target.value })}
+              value={filters.dataDa}
+              onChange={(e) => setFilters({ ...filters, dataDa: e.target.value })}
+            />
+          </div>
+
+          <div className="filter-group">
+            <label>Data A:</label>
+            <input
+              type="date"
+              value={filters.dataA}
+              onChange={(e) => setFilters({ ...filters, dataA: e.target.value })}
             />
           </div>
 

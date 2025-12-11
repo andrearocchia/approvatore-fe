@@ -1,10 +1,18 @@
 export const applyFilters = (invoices, filters) => {
   return invoices.filter(invoice => {
-    // Filtro per data
-    if (filters.data) {
-      const invoiceDate = new Date(invoice.data).toDateString();
-      const filterDate = new Date(filters.data).toDateString();
-      if (invoiceDate !== filterDate) return false;
+    // Filtro per 'data da' e 'data a'
+    if (filters.dataDa || filters.dataA) {
+      const invoiceTime = new Date(invoice.data).getTime();
+
+      if (filters.dataDa) {
+        const da = new Date(filters.dataDa).setHours(0,0,0,0);
+        if (invoiceTime < da) return false;
+      }
+
+      if (filters.dataA) {
+        const a = new Date(filters.dataA).setHours(23,59,59,999);
+        if (invoiceTime > a) return false;
+      }
     }
 
     // Filtro per numero fattura
@@ -38,7 +46,7 @@ export const getUniqueSuppliers = (invoices) => {
 };
 
 export const hasActiveFilters = (filters) => {
-  return filters.data !== '' || 
+  return filters.dataDa !== '' || filters.dataA !== '' || 
     filters.numeroFattura !== '' || 
     filters.fornitore !== '' || 
     (filters.stato && filters.stato !== 'tutti');

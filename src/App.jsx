@@ -31,7 +31,8 @@ export default function App() {
 
   const [showHistory, setShowHistory] = useState(false);
   const [filters, setFilters] = useState({
-    data: '',
+    dataDa: '',
+    dataA: '',
     numeroFattura: '',
     fornitore: '',
     stato: 'tutti'
@@ -168,7 +169,8 @@ export default function App() {
 
   const handleResetFilters = () => {
     const resetFilters = {
-      data: '',
+      dataDa: '',
+      dataA: '',
       numeroFattura: '',
       fornitore: '',
       stato: 'tutti'
