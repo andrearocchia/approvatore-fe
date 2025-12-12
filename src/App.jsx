@@ -26,7 +26,7 @@ import './App.scss';
 export default function App() {
   const [user, setUser] = useState(null);
   const [invoices, setInvoices] = useState([]);
-  const [historyInvoices, setHistoryInvoices] = useState([]);
+  const [allHistoryInvoices, setAllHistoryInvoices] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const [showHistory, setShowHistory] = useState(false);
@@ -42,8 +42,6 @@ export default function App() {
   const [historyPagination, setHistoryPagination] = useState({
     page: 1,
     pageSize: 15,
-    total: 0,
-    totalPages: 0,
   });
 
   const [rejectModal, setRejectModal] = useState({
@@ -121,7 +119,6 @@ export default function App() {
           const dateA = getDataScadenza(a);
           const dateB = getDataScadenza(b);
           
-          // Ordina per data crescente (scadenze più vicine prima)
           if (!dateA && !dateB) return 0;
           if (!dateA) return 1;
           if (!dateB) return -1;
@@ -138,18 +135,13 @@ export default function App() {
     }
   };
 
-  const loadHistoryInvoices = async (page = 1) => {
+  const loadHistoryInvoices = async () => {
     setLoading(true);
     try {
-      const result = await getProcessedInvoices(page, historyPagination.pageSize);
+      const result = await getProcessedInvoices();
       if (result.success) {
-        setHistoryInvoices(result.invoices);
-        setHistoryPagination({
-          page: result.page,
-          pageSize: result.pageSize,
-          total: result.total,
-          totalPages: result.totalPages,
-        });
+        setAllHistoryInvoices(result.invoices);
+        setHistoryPagination({ page: 1, pageSize: 15 });
       }
     } catch (error) {
       console.error("Errore storico:", error);
@@ -159,7 +151,7 @@ export default function App() {
   };
 
   const handlePageChange = (newPage) => {
-    loadHistoryInvoices(newPage);
+    setHistoryPagination({ ...historyPagination, page: newPage });
   };
 
   const removeInvoice = (invoiceId) => {
@@ -201,6 +193,7 @@ export default function App() {
 
   const handleApplyFilters = (newFilters) => {
     setFilters(newFilters);
+    setHistoryPagination({ ...historyPagination, page: 1 });
   };
 
   const handleResetFilters = () => {
@@ -212,6 +205,7 @@ export default function App() {
       stato: 'tutti'
     };
     setFilters(resetFilters);
+    setHistoryPagination({ ...historyPagination, page: 1 });
   };
 
   const invoiceActions = {
@@ -220,8 +214,18 @@ export default function App() {
     onViewInfo: handleViewInfo,
   };
 
+  // Calcola fatture filtrate
+  const filteredHistory = applyFilters(allHistoryInvoices, filters);
+
+  // Calcola paginazione lato client
+  const startIndex = (historyPagination.page - 1) * historyPagination.pageSize;
+  const endIndex = startIndex + historyPagination.pageSize;
+  const paginatedHistory = filteredHistory.slice(startIndex, endIndex);
+
+  const totalPages = Math.ceil(filteredHistory.length / historyPagination.pageSize);
+
   const filteredInvoices = showHistory 
-    ? applyFilters(historyInvoices, filters)
+    ? paginatedHistory
     : applyFilters(invoices, filters);
 
   const isFiltersActive = hasActiveFilters(filters);
@@ -287,7 +291,12 @@ export default function App() {
             onBack={() => setShowHistory(false)}
             isFiltersActive={isFiltersActive}
             onResetFilters={handleResetFilters}
-            pagination={historyPagination}
+            pagination={{
+              page: historyPagination.page,
+              pageSize: historyPagination.pageSize,
+              total: filteredHistory.length,
+              totalPages: totalPages,
+            }}
             onPageChange={handlePageChange}
           />
         ) : (
