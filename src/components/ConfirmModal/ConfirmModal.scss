@@ -14,10 +14,10 @@
   @include button-base;
 
   &.confirm-modal {
-    background: $color-success-light;
+    background: $color-success;
 
     &:hover {
-      background: $color-success-light-hover;
+      background: $color-success-hover;
     }
   }
 }
