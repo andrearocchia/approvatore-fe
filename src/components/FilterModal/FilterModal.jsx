@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import './FilterModal.scss';
 
-function FilterModal({ isOpen, onClose, onApply, showStatoFilter = false }) {
+function FilterModal({ isOpen, onClose, onApply, currentFilters, showStatoFilter = false }) {
   const [filters, setFilters] = useState({
     dataDa: '',
     dataA: '',
@@ -12,17 +12,12 @@ function FilterModal({ isOpen, onClose, onApply, showStatoFilter = false }) {
     stato: 'tutti'
   });
 
+  // Inizializza i filtri con i valori correnti quando il modale si apre
   useEffect(() => {
-    if (!isOpen) {
-      setFilters({
-        dataDa: '',
-        dataA: '',
-        numeroFattura: '',
-        fornitore: '',
-        stato: 'tutti'
-      });
+    if (isOpen && currentFilters) {
+      setFilters(currentFilters);
     }
-  }, [isOpen]);
+  }, [isOpen, currentFilters]);
 
   const handleApply = () => {
     onApply(filters);

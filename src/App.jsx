@@ -322,6 +322,7 @@ export default function App() {
         isOpen={showFilterModal}
         onClose={() => setShowFilterModal(false)}
         onApply={handleApplyFilters}
+        currentFilters={filters}
         showStatoFilter={showHistory}
       />
     </div>
