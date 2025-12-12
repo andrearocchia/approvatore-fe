@@ -35,7 +35,6 @@
           border-radius: 50%;
           padding: 10px;
           cursor: pointer;
-          background: $color-danger-light;
         
           span {
             display: none;
@@ -51,17 +50,45 @@
             }
           }
         }
-        
+
+        .app-logout {
+          background: $color-danger-light;
+
+          @media (min-width: 768px) {
+            &:hover {
+              background-color: $color-danger-hover;
+            }
+          }
+        }
+
         .back-button {
           background-color: $color-secondary;
+
+          @media (min-width: 768px) {
+            &:hover {
+              background-color: $color-secondary-hover;
+            }
+          }
         }
 
         .invoice-history {
           background-color: $color-primary;
+
+          @media (min-width: 768px) {
+            &:hover {
+              background-color: $color-primary-hover;
+            }
+          }
         }
 
         .filter-button {
           background-color: $color-alert;
+
+          @media (min-width: 768px) {
+            &:hover {
+              background-color: $color-alert-hover;
+            }
+          }
         }
       }
     }

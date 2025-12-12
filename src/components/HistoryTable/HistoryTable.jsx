@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faInfo, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import NoteModal from '../NoteModal/NoteModal';
 import "./HistoryTable.scss";
 
-function HistoryTable({ invoices, isFiltersActive, onResetFilters }) {
+function HistoryTable({ invoices, isFiltersActive, onResetFilters, pagination, onPageChange }) {  
   const [noteModal, setNoteModal] = useState({
     isOpen: false,
     note: null,
@@ -13,6 +13,18 @@ function HistoryTable({ invoices, isFiltersActive, onResetFilters }) {
   const handleNoteClick = (note) => {
     if (note) {
       setNoteModal({ isOpen: true, note });
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (pagination.page > 1) {
+      onPageChange(pagination.page - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (pagination.page < pagination.totalPages) {
+      onPageChange(pagination.page + 1);
     }
   };
 
@@ -32,7 +44,7 @@ function HistoryTable({ invoices, isFiltersActive, onResetFilters }) {
             <thead>
               <tr>
                 <th>Numero</th>
-                <th>Data</th>
+                <th>Data Emissione</th>
                 <th>Fornitore</th>
                 <th>Totale</th>
                 <th>Data elaborazione</th>
@@ -51,7 +63,7 @@ function HistoryTable({ invoices, isFiltersActive, onResetFilters }) {
               {invoices.map((inv) => (
                 <tr key={inv.id} className={`row-status-${inv.stato}`}>
                   <td data-label="Numero:">{inv.numero || "—"}</td>
-                  <td data-label="Data:">{inv.data ? new Date(inv.data).toLocaleDateString("it-IT") : "—"}</td>
+                  <td data-label="Data Emissione:">{inv.data ? new Date(inv.data).toLocaleDateString("it-IT") : "—"}</td>
                   <td data-label="Fornitore:">{inv.cedente?.nome || "N/A"}</td>
                   <td data-label="Totale:" className='totale'>{inv.totale || "—"}</td>
                   <td data-label="Data elaborazione:">{inv.updatedAt ? new Date(inv.updatedAt).toLocaleDateString("it-IT") : "—"}</td>
@@ -62,7 +74,7 @@ function HistoryTable({ invoices, isFiltersActive, onResetFilters }) {
                     style={{ cursor: inv.note ? 'pointer' : 'default' }}
                   >
                     <FontAwesomeIcon
-                      icon={faInfoCircle}
+                      icon={faInfo}
                       className="icon-note"
                       style={{ color: inv.note ? "#007BFF" : "#ccc" }}
                     />
@@ -72,6 +84,28 @@ function HistoryTable({ invoices, isFiltersActive, onResetFilters }) {
             </tbody>
           </table>
         </div>
+
+        {pagination && pagination.totalPages > 1 && (
+          <div className="pagination">
+            <button 
+              onClick={handlePreviousPage} 
+              disabled={pagination.page === 1}
+              className="pagination-btn"
+            >
+              <FontAwesomeIcon icon={faChevronLeft} />
+            </button>
+            <span className="pagination-info">
+              Pagina {pagination.page} di {pagination.totalPages} ({pagination.total} fatture)
+            </span>
+            <button 
+              onClick={handleNextPage} 
+              disabled={pagination.page === pagination.totalPages}
+              className="pagination-btn"
+            >
+              <FontAwesomeIcon icon={faChevronRight} />
+            </button>
+          </div>
+        )}
       </div>
 
       <NoteModal

@@ -1,4 +1,5 @@
 @use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
 @use '../../styles/table' as *;
 
 .table-page {
@@ -8,15 +9,21 @@
         tbody {
           tr {
             &.row-status-approvato {
-              background-color: rgba($color-success, 0.15);
+              border-color: $color-success;
+              background-color: rgba($color-success, 0.075);
+
+               @media (min-width: 768px) {
+                border-color: #ccc;
+               }
             }
 
             &.row-status-rifiutato {
-              background-color: rgba($color-danger, 0.15);
-            }
+              border-color: $color-danger;
+              background-color: rgba($color-danger, 0.075);
 
-            &.row-status-in_attesa {
-              background-color: rgba($color-alert, 0.15);
+               @media (min-width: 768px) {
+                border-color: #ccc;
+               }
             }
 
             td {
@@ -28,7 +35,20 @@
 
               // Quinta riga: Stato e Note
               &:nth-child(6) { 
-                grid-column: 2 / -1;
+                grid-column: 1;
+
+                &.actions-cell {
+                  margin-top: $spacing-xs;
+                  padding: $padding-xs;
+                  border-top: 1px solid #ccc;
+                  grid-column: 1 / -1;
+
+                  @media (min-width: 768px) {
+                    padding: $padding-sm;
+                    border-top: none;
+                    border-color: #ccc;
+                  }
+                }
               } // Stato
               
               &:nth-child(7) { 
@@ -43,7 +63,7 @@
 
                 .icon-note {
                   cursor: pointer;
-                  font-size: $font-medium;
+                  transition: color 0.2s;
                 }
               } // Note
             }
@@ -51,13 +71,60 @@
         }
 
         @media (min-width: 768px) {
+          thead {
+            tr {
+              th {
+                // Override larghezze per HistoryTable (7 colonne)
+                &:nth-child(1) { width: 12%; } // Numero
+                &:nth-child(2) { width: 12%; } // Data
+                &:nth-child(3) { width: 30%; } // Fornitore
+                &:nth-child(4) { width: 12%; } // Totale
+                &:nth-child(5) { width: 15%; } // Data elaborazione
+                &:nth-child(6) { width: 12%; } // Stato
+                &:nth-child(7) { width: 7%; text-align: center; } // Note (icona)
+              }
+            }
+          }
+
           tbody {
             tr {
               td {
                 padding: $padding-sm;
+                
+                // Centra l'icona delle note
+                &:nth-child(7) {
+                  text-align: center;
+                  
+                  .icon-note {
+                    cursor: pointer;
+                    transition: color 0.2s;
+                    
+                    &:hover {
+                      opacity: 0.8;
+                    }
+                  }
+                }
               }
             }
           }
+        }
+      }
+    }
+
+    .pagination {
+      @include flex-center;
+      gap: 1rem;
+      padding: $padding;
+      margin-top: $spacing-md;
+
+      .pagination-btn {
+        &:hover:not(:disabled) {
+          background: $color-primary;
+        }
+
+        &:disabled {
+          background: $color-bg-gray;
+          cursor: not-allowed;
         }
       }
     }

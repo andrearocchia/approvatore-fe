@@ -62,8 +62,8 @@ export function getAllInvoices() {
   return apiRequest("/invoices/all");
 }
 
-export function getProcessedInvoices() {
-  return apiRequest("/invoices/processed");
+export function getProcessedInvoices(page = 1, pageSize = 50) {
+  return apiRequest(`/invoices/processed?page=${page}&pageSize=${pageSize}`);
 }
 
 export function getInvoiceById(codiceUnico) {

@@ -39,6 +39,13 @@ export default function App() {
   });
   const [showFilterModal, setShowFilterModal] = useState(false);
 
+  const [historyPagination, setHistoryPagination] = useState({
+    page: 1,
+    pageSize: 15,
+    total: 0,
+    totalPages: 0,
+  });
+
   const [rejectModal, setRejectModal] = useState({
     isOpen: false,
     invoiceId: null,
@@ -112,18 +119,28 @@ export default function App() {
     }
   };
 
-  const loadHistoryInvoices = async () => {
+  const loadHistoryInvoices = async (page = 1) => {
     setLoading(true);
     try {
-      const result = await getProcessedInvoices();
+      const result = await getProcessedInvoices(page, historyPagination.pageSize);
       if (result.success) {
         setHistoryInvoices(result.invoices);
+        setHistoryPagination({
+          page: result.page,
+          pageSize: result.pageSize,
+          total: result.total,
+          totalPages: result.totalPages,
+        });
       }
     } catch (error) {
       console.error("Errore storico:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePageChange = (newPage) => {
+    loadHistoryInvoices(newPage);
   };
 
   const removeInvoice = (invoiceId) => {
@@ -251,6 +268,8 @@ export default function App() {
             onBack={() => setShowHistory(false)}
             isFiltersActive={isFiltersActive}
             onResetFilters={handleResetFilters}
+            pagination={historyPagination}
+            onPageChange={handlePageChange}
           />
         ) : (
           <>
