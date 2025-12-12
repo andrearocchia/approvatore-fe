@@ -25,7 +25,6 @@
         transform: translateX(10px);
         transition: all 0.3s ease;
         margin-left: -5rem;
-        
         background-color: $color-bg-gray;
         color: $color-text-secondary;
         cursor: pointer;
@@ -45,47 +44,36 @@
     }
 
     .table-scroll {
-      max-height: 70vh;
       overflow-y: auto;
       overflow-x: hidden;
 
       /* Chrome, Edge, Safari */
-      &::-webkit-scrollbar {
-        width: 8px;
-      }
-      &::-webkit-scrollbar-track {
-        background: $color-bg-light; 
-        border-radius: 8px;
-      }
-      &::-webkit-scrollbar-thumb {
-        background: $color-border-light;
-        border-radius: 8px;
-      }
-      &::-webkit-scrollbar-thumb:hover {
-        background: $color-primary;
-      }
+      &::-webkit-scrollbar { width: 8px; }
+      &::-webkit-scrollbar-track { background: $color-bg-light; border-radius: 8px; }
+      &::-webkit-scrollbar-thumb { background: $color-border-light; border-radius: 8px; }
+      &::-webkit-scrollbar-thumb:hover { background: $color-primary; }
 
       /* Firefox */
       scrollbar-width: thin;  
       scrollbar-color: $color-border-light $color-bg-light;
 
-      .invoice-table {
+      .invoice-table, .history-table {
         width: $width-100;
         border-collapse: collapse;
         font-size: $font-small;
         display: block;
         min-width: $width-100;
 
-        thead {
-          display: none;
-        }
+        thead { display: none; }
 
         tbody {
           @include flex-center;
           flex-direction: column;
 
+          // Mobile layout a griglia
           tr {
             display: grid;
+            align-items: start;
             grid-template-columns: 1fr 1fr;
             gap: $spacing-xs;
             background: $color-bg-light;
@@ -102,7 +90,7 @@
               flex-wrap: wrap;
               text-align: left;
               border-bottom: none;
-              color: color-text-primary;
+              color: $color-text-primary;
 
               &::before {
                 content: attr(data-label);
@@ -111,27 +99,21 @@
                 margin-right: $spacing-xs;
               }
 
-              // Prima riga: Numero e Data
-              &:nth-child(1) { grid-column: 1; } // Numero
-              &:nth-child(2) { grid-column: 2; } // Data
-
-              // Seconda riga: Fornitore a tutta larghezza
+              // Mobile layout: riga/colonna semantiche
+              &:nth-child(1) { grid-column: 1; }      // Numero
+              &:nth-child(2) { grid-column: 2; }      // Data Emissione
               &:nth-child(3) { grid-column: 1 / -1; } // Fornitore
-
-              &:nth-child(4) {   
-                &.totale {
-                  font-weight: $font-weight;
-                  color: $color-text-primary;
-                  margin-right: $spacing-xs;
-                }
-              } // Totale
+              &:nth-child(4) { grid-column: 1 / -1; } // Totale
+              &:nth-child(5) { grid-column: 1; }      // Data scadenza
+              &:nth-child(6) { grid-column: 2; }      // Azione / Data elaborazione
+              &:nth-child(7) { grid-column: 1; }      // Stato
+              &:nth-child(8) { grid-column: 2; }      // Note
             }
           }
         }
-      }
 
-      @media (min-width: 768px) {
-        .invoice-table {
+        // Tablet/desktop
+        @media (min-width: 768px) {
           display: table;
           table-layout: fixed;
 
@@ -149,15 +131,14 @@
                 color: $color-text-primary;
                 border-bottom: 2px solid $color-border-light;
 
-                &.actions-th {text-align: center;}
+                &.actions-th { text-align: center; }
 
-                // Larghezze fisse per uniformità tra tabelle
-                &:nth-child(1) { width: 15%; } // Numero
-                &:nth-child(2) { width: 15%; } // Data
-                &:nth-child(3) { width: 40%; } // Fornitore
-                &:nth-child(4) { width: 15%; } // Totale
-                &:nth-child(5) { width: 15%; } // IVA/Stato
-                &:nth-child(6) { width: 15%; } // Azione/Note
+                &:nth-child(1) { width: 12%; } // Numero
+                &:nth-child(2) { width: 13%; } // Data Emissione
+                &:nth-child(3) { width: 30%; } // Fornitore
+                &:nth-child(4) { width: 13%; } // Totale
+                &:nth-child(5) { width: 12%; } // Data Scadenza
+                &:nth-child(6) { width: 20%; } // Azione / Data elaborazione
               }
             }
           }
@@ -173,13 +154,25 @@
               margin-bottom: 0;
               box-shadow: none;
 
+              &:hover { background: $color-bg-light; }
+
               td {
                 display: table-cell;
                 text-align: left;
-                color: color-text-primary;
+                color: $color-text-primary;
+                padding: $padding-sm;
 
-                &::before {
-                  display: none;
+                &::before { display: none; }
+
+                &:nth-child(3), &:nth-child(4) { font-weight: $font-weight-sm; }
+
+                &.actions-cell {
+                  display: flex;
+                  border-top: none;
+                  text-align: center;
+                  gap: $spacing-xs;
+
+                  .icon-info, .icon-approve, .icon-reject { margin: 0 $spacing-xs; }
                 }
               }
             }

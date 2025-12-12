@@ -4,6 +4,14 @@ import { faCheck, faTimes, faInfo } from '@fortawesome/free-solid-svg-icons';
 import './InvoicesTable.scss';
 
 function InvoicesTable({ invoices, actions, isFiltersActive, onResetFilters }) {
+  const getDataScadenza = (invoice) => {
+    if (!invoice.dettagliPagamento || invoice.dettagliPagamento.length === 0) {
+      return '—';
+    }
+    const primaScadenza = invoice.dettagliPagamento[0].dataScadenzaPagamento;
+    return primaScadenza ? new Date(primaScadenza).toLocaleDateString('it-IT') : '—';
+  };
+
   return (
     <div className="table-page">
       <div className="table-container">
@@ -15,33 +23,33 @@ function InvoicesTable({ invoices, actions, isFiltersActive, onResetFilters }) {
           >Resetta
           </button>
         </div>
-        <div className="table-scroll">
+        <div className="table-scroll invoice-table">
           <table className="invoice-table">
             <thead>
               <tr> 
-                {/*<th>Id</th>*/}
                 <th>Numero</th>
-                <th>Data</th>
+                <th>Data Emissione</th>
                 <th>Fornitore</th>
                 <th>Totale</th>
+                <th>Data Scadenza</th>
                 <th className="actions-th">Azione</th>
               </tr>
             </thead>
             <tbody>
               {invoices.length === 0 && (
                 <tr>
-                  <td colSpan="10" style={{ textAlign: 'center', padding: '20px' }}>
+                  <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
                     Nessuna fattura in attesa
                   </td>
                 </tr>
               )}
               {invoices.map(inv => (
                 <tr key={inv.id}>
-                  {/*<td data-label="Codice Unico">{inv.id}</td>*/}
                   <td data-label="Numero:">{inv.numero || '—'}</td>
-                  <td data-label="Data:">{inv.data ? new Date(inv.data).toLocaleDateString('it-IT') : '—'}</td>
+                  <td data-label="Data Emissione:">{inv.data ? new Date(inv.data).toLocaleDateString('it-IT') : '—'}</td>
                   <td data-label="Fornitore:">{inv.cedente?.nome || 'N/A'}</td>
                   <td data-label="Totale:" className='totale'>{inv.totale || '—'}</td>
+                  <td data-label="Data Scadenza:">{getDataScadenza(inv)}</td>
                   <td className="actions-cell">
                     <FontAwesomeIcon
                       icon={faInfo}

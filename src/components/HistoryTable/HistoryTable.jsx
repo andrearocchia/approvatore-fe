@@ -28,6 +28,14 @@ function HistoryTable({ invoices, isFiltersActive, onResetFilters, pagination, o
     }
   };
 
+  const getDataScadenza = (invoice) => {
+    if (!invoice.dettagliPagamento || invoice.dettagliPagamento.length === 0) {
+      return '—';
+    }
+    const primaScadenza = invoice.dettagliPagamento[0].dataScadenzaPagamento;
+    return primaScadenza ? new Date(primaScadenza).toLocaleDateString('it-IT') : '—';
+  };
+
   return (
     <div className="table-page">
       <div className="table-container">
@@ -39,14 +47,15 @@ function HistoryTable({ invoices, isFiltersActive, onResetFilters, pagination, o
           >Resetta
           </button>
         </div>
-        <div className="table-scroll">
-          <table className="invoice-table">
+        <div className="table-scroll history-table">
+          <table className="history-table">
             <thead>
               <tr>
                 <th>Numero</th>
                 <th>Data Emissione</th>
                 <th>Fornitore</th>
                 <th>Totale</th>
+                <th>Data Scadenza</th>
                 <th>Data elaborazione</th>
                 <th>Stato</th>
                 <th>Note</th>
@@ -66,6 +75,7 @@ function HistoryTable({ invoices, isFiltersActive, onResetFilters, pagination, o
                   <td data-label="Data Emissione:">{inv.data ? new Date(inv.data).toLocaleDateString("it-IT") : "—"}</td>
                   <td data-label="Fornitore:">{inv.cedente?.nome || "N/A"}</td>
                   <td data-label="Totale:" className='totale'>{inv.totale || "—"}</td>
+                  <td data-label="Data Scadenza:">{getDataScadenza(inv)}</td>
                   <td data-label="Data elaborazione:">{inv.updatedAt ? new Date(inv.updatedAt).toLocaleDateString("it-IT") : "—"}</td>
                   <td data-label="Stato:">{inv.stato}</td>
                   <td 

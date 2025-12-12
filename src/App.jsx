@@ -103,6 +103,13 @@ export default function App() {
     }
   }, [user]);
 
+  const getDataScadenza = (invoice) => {
+    if (!invoice.dettagliPagamento || invoice.dettagliPagamento.length === 0) {
+      return null;
+    }
+    return invoice.dettagliPagamento[0].dataScadenzaPagamento || null;
+  };
+
   const loadInvoices = async () => {
     if (!user?.username) return;
     
@@ -110,7 +117,19 @@ export default function App() {
     try {
       const result = await getStandByInvoices(user.username);
       if (result.success) {
-        setInvoices(result.invoices);
+        const sortedInvoices = [...result.invoices].sort((a, b) => {
+          const dateA = getDataScadenza(a);
+          const dateB = getDataScadenza(b);
+          
+          // Ordina per data crescente (scadenze più vicine prima)
+          if (!dateA && !dateB) return 0;
+          if (!dateA) return 1;
+          if (!dateB) return -1;
+          
+          return new Date(dateA) - new Date(dateB);
+        });
+        
+        setInvoices(sortedInvoices);
       }
     } catch (error) {
       console.error("Errore nel caricare le fatture:", error);
