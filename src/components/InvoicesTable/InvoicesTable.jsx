@@ -1,23 +1,12 @@
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faTimes, faFilePdf,  faInfo } from '@fortawesome/free-solid-svg-icons';
-
+import { faCheck, faTimes, faFilePdf, faInfo } from '@fortawesome/free-solid-svg-icons';
+import { formatDataScadenza } from '../../utils/invoiceUtils';
 import NoteModal from '../NoteModal/NoteModal';
 import './InvoicesTable.scss';
 
 function InvoicesTable({ invoices, actions, isFiltersActive, onResetFilters }) {
-  const [noteModal, setNoteModal] = useState({
-    isOpen: false,
-    note: ''
-  });
-
-  const getDataScadenza = (invoice) => {
-    if (!invoice.dettagliPagamento || invoice.dettagliPagamento.length === 0) {
-      return '—';
-    }
-    const primaScadenza = invoice.dettagliPagamento[0].dataScadenzaPagamento;
-    return primaScadenza ? new Date(primaScadenza).toLocaleDateString('it-IT') : '—';
-  };
+  const [noteModal, setNoteModal] = useState({ isOpen: false, note: '' });
 
   const handleViewNotes = (note) => {
     setNoteModal({ isOpen: true, note });
@@ -31,7 +20,8 @@ function InvoicesTable({ invoices, actions, isFiltersActive, onResetFilters }) {
           <button 
             className={`btn-reset-filters ${isFiltersActive ? 'visible' : ''}`}
             onClick={onResetFilters}
-          >Resetta
+          >
+            Resetta
           </button>
         </div>
         <div className="table-scroll invoice-table">
@@ -57,13 +47,15 @@ function InvoicesTable({ invoices, actions, isFiltersActive, onResetFilters }) {
               {invoices.map(inv => (
                 <tr key={inv.id}>
                   <td data-label="Numero:">{inv.numero || '—'}</td>
-                  <td data-label="Data Emissione:">{inv.data ? new Date(inv.data).toLocaleDateString('it-IT') : '—'}</td>
+                  <td data-label="Data Emissione:">
+                    {inv.data ? new Date(inv.data).toLocaleDateString('it-IT') : '—'}
+                  </td>
                   <td data-label="Fornitore:">{inv.cedente?.nome || 'N/A'}</td>
                   <td data-label="Totale:" className='totale'>{inv.totale || '—'}</td>
-                  <td data-label="Data Scadenza:">{getDataScadenza(inv)}</td>
+                  <td data-label="Data Scadenza:">{formatDataScadenza(inv)}</td>
                   <td className="actions-cell">
                     <FontAwesomeIcon
-                      icon={ faInfo}
+                      icon={faInfo}
                       className={`icon-notes ${inv.noteInInvio ? 'has-notes' : ''}`}
                       onClick={() => handleViewNotes(inv.noteInInvio || 'Nessuna nota disponibile')}
                       title={inv.noteInInvio ? 'Visualizza note' : 'Nessuna nota'}
@@ -77,11 +69,7 @@ function InvoicesTable({ invoices, actions, isFiltersActive, onResetFilters }) {
                     <FontAwesomeIcon
                       icon={faCheck}
                       className="icon-approve"
-                      onClick={() => actions.onApprove(
-                        inv.id,
-                        inv.numero,
-                        inv.cedente?.nome
-                      )}
+                      onClick={() => actions.onApprove(inv.id, inv.numero, inv.cedente?.nome)}
                       title="Approva"
                     />
                     <FontAwesomeIcon

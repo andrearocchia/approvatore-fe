@@ -14,7 +14,7 @@
                 &:nth-child(6) {
                   &.actions-cell {
                     margin-top: $spacing-xs;
-                    padding: $padding-xs;
+                    padding-top: $padding;
                     border-top: 1px solid #ccc;
                     grid-column: 1 / -1;
 

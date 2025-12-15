@@ -1,22 +1,16 @@
-import { useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
-import { 
-  registerUnauthorizedCallback, 
-  getStandByInvoices, 
-  getProcessedInvoices,
-  getInvoicePdfUrl, 
-  updateInvoiceStatus 
-} from "./api/apiClient";
+import { useState } from 'react';
+import { getInvoicePdfUrl, updateInvoiceStatus } from "./api/apiClient";
+import { applyFilters } from './utils/filterUtils';
 
-import { applyFilters, hasActiveFilters } from './utils/filterUtils';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faClock, faList, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { useAuth } from './hooks/useAuth';
+import { useStandByInvoices, useHistoryInvoices } from './hooks/useInvoices';
+import { useFilters } from './hooks/useFilters';
+import { useModal } from './hooks/useModal';
 
 import Login from './components/Login/Login';
+import AppHeader from './components/AppHeader/AppHeader';
 import InvoicesTable from './components/InvoicesTable/InvoicesTable';
 import HistoryTable from './components/HistoryTable/HistoryTable';
-
 import RejectModal from './components/RejectModal/RejectModal';
 import ConfirmModal from './components/ConfirmModal/ConfirmModal';
 import FilterModal from './components/FilterModal/FilterModal';
@@ -24,186 +18,51 @@ import FilterModal from './components/FilterModal/FilterModal';
 import './App.scss';
 
 export default function App() {
-  const [user, setUser] = useState(null);
-  const [invoices, setInvoices] = useState([]);
+  // ===== HOOKS =====
+  const { user, handleLogin, handleLogout } = useAuth();
+  const { invoices, loading: loadingStandby, removeInvoice } = useStandByInvoices(user?.username);
+  const { 
+    invoices: historyInvoices, 
+    loading: loadingHistory, 
+    pagination,
+    loadInvoices: loadHistoryInvoices,
+    handlePageChange,
+    handlePageSizeChange 
+  } = useHistoryInvoices();
+  const { filters, applyFilters: setFilters, resetFilters, isActive: isFiltersActive } = useFilters();
   
-  const [historyInvoices, setHistoryInvoices] = useState([]);
-  const [historyPaginationData, setHistoryPaginationData] = useState({
-    total: 0,
-    totalPages: 0,
-  });
-  
-  const [loading, setLoading] = useState(false);
-
+  // ===== STATE =====
   const [showHistory, setShowHistory] = useState(false);
-  const [filters, setFilters] = useState({
-    dataDa: '',
-    dataA: '',
-    numeroFattura: '',
-    fornitore: '',
-    stato: 'tutti'
-  });
   const [showFilterModal, setShowFilterModal] = useState(false);
+  
+  // Modali con hook riutilizzabile
+  const rejectModal = useModal({ invoiceId: null });
+  const confirmModal = useModal({ invoiceId: null, invoiceNumber: null, cedente: null });
 
-  const [historyPagination, setHistoryPagination] = useState({
-    page: 1,
-    pageSize: 10,
-  });
-
-  const [rejectModal, setRejectModal] = useState({
-    isOpen: false,
-    invoiceId: null,
-  });
-
-  const [confirmModal, setConfirmModal] = useState({
-    isOpen: false,
-    invoiceId: null,
-    invoiceNumber: null,
-    cedente: null,
-  });
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        setUser({
-          username: decoded.username,
-          role: decoded.role,
-          token,
-        });
-      } catch {
-        localStorage.removeItem("token");
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    registerUnauthorizedCallback(() => {
-      handleLogout();
-    });
-  }, []);
-
-  const handleLogin = () => {
-    const token = localStorage.getItem("token");
-    const decoded = jwtDecode(token);
-
-    setUser({
-      username: decoded.username,
-      role: decoded.role,
-      token,
-    });
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setUser(null);
-  };
-
-  useEffect(() => {
-    if (user) {
-      loadInvoices();
-    }
-  }, [user]);
-
-  const getDataScadenza = (invoice) => {
-    if (!invoice.dettagliPagamento || invoice.dettagliPagamento.length === 0) {
-      return null;
-    }
-    return invoice.dettagliPagamento[0].dataScadenzaPagamento || null;
-  };
-
-  const loadInvoices = async () => {
-    if (!user?.username) return;
-    
-    setLoading(true);
-    try {
-      const result = await getStandByInvoices(user.username);
-      if (result.success) {
-        const sortedInvoices = [...result.invoices].sort((a, b) => {
-          const dateA = getDataScadenza(a);
-          const dateB = getDataScadenza(b);
-          
-          if (!dateA && !dateB) return 0;
-          if (!dateA) return 1;
-          if (!dateB) return -1;
-          
-          return new Date(dateA) - new Date(dateB);
-        });
-        
-        setInvoices(sortedInvoices);
-      }
-    } catch (error) {
-      console.error("Errore nel caricare le fatture:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Carica solo la pagina corrente con filtri applicati
-  const loadHistoryInvoices = async (page = 1, currentFilters = filters, pageSize = historyPagination.pageSize) => {
-    setLoading(true);
-    try {
-      const result = await getProcessedInvoices(
-        page,
-        pageSize,  // Usa il parametro definito dall'user
-        currentFilters
-      );
-      
-      if (result.success) {
-        setHistoryInvoices(result.data);
-        setHistoryPaginationData({
-          total: result.total,
-          totalPages: result.totalPages,
-        });
-        setHistoryPagination(prev => ({ ...prev, page: result.page }));
-      }
-    } catch (error) {
-      console.error("Errore storico:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Ricarica i dati quando cambia pagina
-  const handlePageChange = (newPage) => {
-    loadHistoryInvoices(newPage, filters);
-  };
-
-  // Gestisce cambio pageSize
-  const handlePageSizeChange = (newPageSize) => {
-    setHistoryPagination(prev => ({ ...prev, pageSize: newPageSize }));
-    loadHistoryInvoices(1, filters, newPageSize);
-  };
-
-  const removeInvoice = (invoiceId) => {
-    setInvoices(prev => prev.filter(inv => inv.id !== invoiceId));
-  };
-
+  // ===== HANDLERS - Invoice Actions =====
   const handleReject = (invoiceId) => {
-    setRejectModal({ isOpen: true, invoiceId });
+    rejectModal.openModal({ invoiceId });
   };
 
   const handleConfirmReject = async (reason) => {
     try {
-      await updateInvoiceStatus(rejectModal.invoiceId, 'rifiutato', reason);
-      removeInvoice(rejectModal.invoiceId);
-      setRejectModal({ isOpen: false, invoiceId: null });
+      await updateInvoiceStatus(rejectModal.modalState.invoiceId, 'rifiutato', reason);
+      removeInvoice(rejectModal.modalState.invoiceId);
+      rejectModal.closeModal();
     } catch (error) {
       alert("Errore durante il rifiuto della fattura");
     }
   };
 
   const handleApprove = (invoiceId, invoiceNumber, cedente) => {
-    setConfirmModal({ isOpen: true, invoiceId, invoiceNumber, cedente });
+    confirmModal.openModal({ invoiceId, invoiceNumber, cedente });
   };
 
   const handleConfirmApprove = async (note) => {
     try {
-      await updateInvoiceStatus(confirmModal.invoiceId, 'approvato', note);
-      removeInvoice(confirmModal.invoiceId);
-      setConfirmModal({ isOpen: false, invoiceId: null, invoiceNumber: null, cedente: null });
+      await updateInvoiceStatus(confirmModal.modalState.invoiceId, 'approvato', note);
+      removeInvoice(confirmModal.modalState.invoiceId);
+      confirmModal.closeModal();
     } catch {
       alert("Errore durante l'approvazione");
     }
@@ -214,7 +73,7 @@ export default function App() {
     window.open(pdfUrl, '_blank');
   };
 
-  // Ricarica dalla prima pagina con nuovi filtri
+  // ===== HANDLERS - Filters & History =====
   const handleApplyFilters = (newFilters) => {
     setFilters(newFilters);
     if (showHistory) {
@@ -222,77 +81,42 @@ export default function App() {
     }
   };
 
-  // Ricarica dalla prima pagina senza filtri
   const handleResetFilters = () => {
-    const resetFilters = {
-      dataDa: '',
-      dataA: '',
-      numeroFattura: '',
-      fornitore: '',
-      stato: 'tutti'
-    };
-    setFilters(resetFilters);
+    resetFilters();
     if (showHistory) {
-      loadHistoryInvoices(1, resetFilters);
+      loadHistoryInvoices(1, {});
     }
   };
 
+  const handleToggleHistory = (value) => {
+    setShowHistory(value);
+    if (value) {
+      loadHistoryInvoices(1, filters);
+    }
+  };
+
+  // ===== DERIVED STATE =====
+  const loading = showHistory ? loadingHistory : loadingStandby;
+  const displayedInvoices = showHistory ? historyInvoices : applyFilters(invoices, filters);
+  
   const invoiceActions = {
     onApprove: handleApprove,
     onReject: handleReject,
     onViewInfo: handleViewInfo,
   };
 
-  // Filtri lato client solo per InvoicesTable
-  const filteredInvoices = showHistory ? historyInvoices : applyFilters(invoices, filters);
-
-  const isFiltersActive = hasActiveFilters(filters);
-
+  // ===== RENDER =====
   return (
     <div className="app-container">
-      <header className="app-header">
-        {user && (
-          <div className="app-user">
-            <span className="app-username">Buongiorno, {user.username}</span>
-
-            <div className="button-room">
-              {showHistory ? (
-                <button
-                  title='Visualizza fatture da elaborare'
-                  className="back-button"
-                  onClick={() => setShowHistory(false)}>
-                  <FontAwesomeIcon icon={faList} />
-                  <span className="invoice-list">Fatture</span>
-                </button>
-              ) : (
-                <button
-                  title='Visualizza storico fatture'
-                  className="invoice-history"
-                  onClick={() => {
-                    setShowHistory(true);
-                    loadHistoryInvoices(1, filters);
-                  }}>
-                  <FontAwesomeIcon icon={faClock} />
-                  <span className="invoice-history-text">Storico</span>
-                </button>
-              )}
-              
-              <button
-                title='Filtra fatture'
-                className="filter-button"
-                onClick={() => setShowFilterModal(true)}>
-                <FontAwesomeIcon icon={faFilter} />
-                <span className="filter-text">Filtra</span>
-              </button>
-
-              <button className="app-logout" onClick={handleLogout}>
-                <FontAwesomeIcon icon={faUser} />
-                <span className="app-logout-text">Logout</span>
-              </button>
-            </div>
-          </div>
-        )}
-      </header>
+      {user && (
+        <AppHeader
+          username={user.username}
+          showHistory={showHistory}
+          onToggleHistory={handleToggleHistory}
+          onOpenFilter={() => setShowFilterModal(true)}
+          onLogout={handleLogout}
+        />
+      )}
 
       <main>
         {!user ? (
@@ -303,41 +127,33 @@ export default function App() {
           </div>
         ) : showHistory ? (
           <HistoryTable
-            invoices={filteredInvoices}
-            onBack={() => setShowHistory(false)}
+            invoices={displayedInvoices}
             isFiltersActive={isFiltersActive}
             onResetFilters={handleResetFilters}
-            pagination={{
-              page: historyPagination.page,
-              pageSize: historyPagination.pageSize,
-              total: historyPaginationData.total,
-              totalPages: historyPaginationData.totalPages,
-            }}
-            onPageChange={handlePageChange}
-            onPageSizeChange={handlePageSizeChange}
+            pagination={pagination}
+            onPageChange={(page) => handlePageChange(page, filters)}
+            onPageSizeChange={(size) => handlePageSizeChange(size, filters)}
           />
         ) : (
           <>
             <InvoicesTable 
-              invoices={filteredInvoices} 
+              invoices={displayedInvoices} 
               actions={invoiceActions}
               isFiltersActive={isFiltersActive}
               onResetFilters={handleResetFilters}
             />
 
             <ConfirmModal
-              isOpen={confirmModal.isOpen}
-              onClose={() =>
-                setConfirmModal({ isOpen: false, invoiceId: null, invoiceNumber: null, cedente: null })
-              }
+              isOpen={confirmModal.modalState.isOpen}
+              onClose={confirmModal.closeModal}
               onConfirm={handleConfirmApprove}
-              invoiceNumber={confirmModal.invoiceNumber}
-              cedente={confirmModal.cedente}
+              invoiceNumber={confirmModal.modalState.invoiceNumber}
+              cedente={confirmModal.modalState.cedente}
             />
 
             <RejectModal
-              isOpen={rejectModal.isOpen}
-              onClose={() => setRejectModal({ isOpen: false, invoiceId: null })}
+              isOpen={rejectModal.modalState.isOpen}
+              onClose={rejectModal.closeModal}
               onConfirm={handleConfirmReject}
             />
           </>

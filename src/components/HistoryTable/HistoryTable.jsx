@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfo, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { formatDataScadenza } from '../../utils/invoiceUtils';
 import NoteModal from '../NoteModal/NoteModal';
 import "./HistoryTable.scss";
 
@@ -12,10 +13,7 @@ function HistoryTable({
   onPageChange,
   onPageSizeChange 
 }) {  
-  const [noteModal, setNoteModal] = useState({
-    isOpen: false,
-    note: null,
-  });
+  const [noteModal, setNoteModal] = useState({ isOpen: false, note: null });
 
   const handleNoteClick = (note) => {
     if (note) {
@@ -40,14 +38,6 @@ function HistoryTable({
     onPageSizeChange(newSize);
   };
 
-  const getDataScadenza = (invoice) => {
-    if (!invoice.dettagliPagamento || invoice.dettagliPagamento.length === 0) {
-      return '—';
-    }
-    const primaScadenza = invoice.dettagliPagamento[0].dataScadenzaPagamento;
-    return primaScadenza ? new Date(primaScadenza).toLocaleDateString('it-IT') : '—';
-  };
-
   return (
     <div className="table-page">
       <div className="table-container">
@@ -56,7 +46,8 @@ function HistoryTable({
           <button 
             className={`btn-reset-filters ${isFiltersActive ? 'visible' : ''}`}
             onClick={onResetFilters}
-          >Resetta
+          >
+            Resetta
           </button>
         </div>
         <div className="table-scroll history-table">
@@ -84,11 +75,15 @@ function HistoryTable({
               {invoices.map((inv) => (
                 <tr key={inv.id} className={`row-status-${inv.stato}`}>
                   <td data-label="Numero:">{inv.numero || "—"}</td>
-                  <td data-label="Data Emissione:">{inv.data ? new Date(inv.data).toLocaleDateString("it-IT") : "—"}</td>
+                  <td data-label="Data Emissione:">
+                    {inv.data ? new Date(inv.data).toLocaleDateString("it-IT") : "—"}
+                  </td>
                   <td data-label="Fornitore:">{inv.cedente?.nome || "N/A"}</td>
                   <td data-label="Totale:" className='totale'>{inv.totale || "—"}</td>
-                  <td data-label="Data Scadenza:">{getDataScadenza(inv)}</td>
-                  <td data-label="Data elaborazione:">{inv.updatedAt ? new Date(inv.updatedAt).toLocaleDateString("it-IT") : "—"}</td>
+                  <td data-label="Data Scadenza:">{formatDataScadenza(inv)}</td>
+                  <td data-label="Data elaborazione:">
+                    {inv.updatedAt ? new Date(inv.updatedAt).toLocaleDateString("it-IT") : "—"}
+                  </td>
                   <td data-label="Stato:">{inv.stato}</td>
                   <td 
                     data-label="Note" 

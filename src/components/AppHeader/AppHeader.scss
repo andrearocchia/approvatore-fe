@@ -1,0 +1,123 @@
+@use '../../styles/variables' as *;
+
+.app-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: $spacing-md;
+
+  .app-user {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: $width-100;
+    margin-top: $spacing-xs;
+
+    .app-username {
+      margin-right: 12px;
+    }
+
+    .button-room {
+      display: flex;
+      gap: 0.5rem;
+
+      @media (min-width: 768px) {
+        gap: 1.5rem;
+      }
+
+      .app-logout, .invoice-history, .back-button, .filter-button {
+        border: none;
+        border-radius: 50%;
+        padding: 10px;
+        cursor: pointer;
+      
+        span {
+          display: none;
+        }
+
+        @media (min-width: 768px) {
+          border-radius: $border-radius;
+          padding: 0.5rem 1rem;
+
+          span {
+            display: inline;
+            margin-left: $spacing-xs;
+          }
+        }
+      }
+
+      .app-logout {
+        background: linear-gradient(
+          to right,
+          $color-danger-light,
+          $color-danger-dark
+        );
+
+        @media (min-width: 768px) {
+          &:hover {
+            background: linear-gradient(
+            to right,
+            $color-danger-dark,
+            $color-danger-light
+          );
+          }
+        }
+      }
+
+      .back-button {
+        background: linear-gradient(
+          to right,
+          $color-secondary-light,
+          $color-secondary-dark
+        );
+
+        @media (min-width: 768px) {
+          &:hover {
+            background: linear-gradient(
+            to right,
+            $color-secondary-dark,
+            $color-secondary-light
+          );
+          }
+        }
+      }
+
+      .invoice-history {
+        background: linear-gradient(
+          to right,
+          $color-primary-light,
+          $color-primary-dark
+        );
+
+        @media (min-width: 768px) {
+          &:hover {
+            background: linear-gradient(
+              to right,
+              $color-primary-dark,
+              $color-primary-light
+            );
+          }
+        }
+      }
+
+      .filter-button {
+        background: linear-gradient(
+          to right,
+          $color-alert-light,
+          $color-alert-dark
+        );
+
+        @media (min-width: 768px) {
+          &:hover {
+            background: linear-gradient(
+            to right,
+            $color-alert-dark,
+            $color-alert-light
+          );
+          }
+        }
+      }
+    }
+  }
+}
