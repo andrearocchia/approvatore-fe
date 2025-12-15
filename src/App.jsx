@@ -26,7 +26,13 @@ import './App.scss';
 export default function App() {
   const [user, setUser] = useState(null);
   const [invoices, setInvoices] = useState([]);
-  const [allHistoryInvoices, setAllHistoryInvoices] = useState([]);
+  
+  const [historyInvoices, setHistoryInvoices] = useState([]);
+  const [historyPaginationData, setHistoryPaginationData] = useState({
+    total: 0,
+    totalPages: 0,
+  });
+  
   const [loading, setLoading] = useState(false);
 
   const [showHistory, setShowHistory] = useState(false);
@@ -41,7 +47,7 @@ export default function App() {
 
   const [historyPagination, setHistoryPagination] = useState({
     page: 1,
-    pageSize: 15,
+    pageSize: 10,
   });
 
   const [rejectModal, setRejectModal] = useState({
@@ -135,13 +141,23 @@ export default function App() {
     }
   };
 
-  const loadHistoryInvoices = async () => {
+  // Carica solo la pagina corrente con filtri applicati
+  const loadHistoryInvoices = async (page = 1, currentFilters = filters, pageSize = historyPagination.pageSize) => {
     setLoading(true);
     try {
-      const result = await getProcessedInvoices();
+      const result = await getProcessedInvoices(
+        page,
+        pageSize,  // Usa il parametro definito dall'user
+        currentFilters
+      );
+      
       if (result.success) {
-        setAllHistoryInvoices(result.invoices);
-        setHistoryPagination({ page: 1, pageSize: 15 });
+        setHistoryInvoices(result.data);
+        setHistoryPaginationData({
+          total: result.total,
+          totalPages: result.totalPages,
+        });
+        setHistoryPagination(prev => ({ ...prev, page: result.page }));
       }
     } catch (error) {
       console.error("Errore storico:", error);
@@ -150,8 +166,15 @@ export default function App() {
     }
   };
 
+  // Ricarica i dati quando cambia pagina
   const handlePageChange = (newPage) => {
-    setHistoryPagination({ ...historyPagination, page: newPage });
+    loadHistoryInvoices(newPage, filters);
+  };
+
+  // Gestisce cambio pageSize
+  const handlePageSizeChange = (newPageSize) => {
+    setHistoryPagination(prev => ({ ...prev, pageSize: newPageSize }));
+    loadHistoryInvoices(1, filters, newPageSize);
   };
 
   const removeInvoice = (invoiceId) => {
@@ -191,11 +214,15 @@ export default function App() {
     window.open(pdfUrl, '_blank');
   };
 
+  // Ricarica dalla prima pagina con nuovi filtri
   const handleApplyFilters = (newFilters) => {
     setFilters(newFilters);
-    setHistoryPagination({ ...historyPagination, page: 1 });
+    if (showHistory) {
+      loadHistoryInvoices(1, newFilters);
+    }
   };
 
+  // Ricarica dalla prima pagina senza filtri
   const handleResetFilters = () => {
     const resetFilters = {
       dataDa: '',
@@ -205,7 +232,9 @@ export default function App() {
       stato: 'tutti'
     };
     setFilters(resetFilters);
-    setHistoryPagination({ ...historyPagination, page: 1 });
+    if (showHistory) {
+      loadHistoryInvoices(1, resetFilters);
+    }
   };
 
   const invoiceActions = {
@@ -214,19 +243,8 @@ export default function App() {
     onViewInfo: handleViewInfo,
   };
 
-  // Calcola fatture filtrate
-  const filteredHistory = applyFilters(allHistoryInvoices, filters);
-
-  // Calcola paginazione lato client
-  const startIndex = (historyPagination.page - 1) * historyPagination.pageSize;
-  const endIndex = startIndex + historyPagination.pageSize;
-  const paginatedHistory = filteredHistory.slice(startIndex, endIndex);
-
-  const totalPages = Math.ceil(filteredHistory.length / historyPagination.pageSize);
-
-  const filteredInvoices = showHistory 
-    ? paginatedHistory
-    : applyFilters(invoices, filters);
+  // Filtri lato client solo per InvoicesTable
+  const filteredInvoices = showHistory ? historyInvoices : applyFilters(invoices, filters);
 
   const isFiltersActive = hasActiveFilters(filters);
 
@@ -252,13 +270,13 @@ export default function App() {
                   className="invoice-history"
                   onClick={() => {
                     setShowHistory(true);
-                    loadHistoryInvoices();
+                    loadHistoryInvoices(1, filters);
                   }}>
                   <FontAwesomeIcon icon={faClock} />
                   <span className="invoice-history-text">Storico</span>
                 </button>
               )}
-              {/* Filtro */}
+              
               <button
                 title='Filtra fatture'
                 className="filter-button"
@@ -267,12 +285,10 @@ export default function App() {
                 <span className="filter-text">Filtra</span>
               </button>
 
-              {/* Logout */}
               <button className="app-logout" onClick={handleLogout}>
                 <FontAwesomeIcon icon={faUser} />
                 <span className="app-logout-text">Logout</span>
               </button>
-
             </div>
           </div>
         )}
@@ -294,10 +310,11 @@ export default function App() {
             pagination={{
               page: historyPagination.page,
               pageSize: historyPagination.pageSize,
-              total: filteredHistory.length,
-              totalPages: totalPages,
+              total: historyPaginationData.total,
+              totalPages: historyPaginationData.totalPages,
             }}
             onPageChange={handlePageChange}
+            onPageSizeChange={handlePageSizeChange}
           />
         ) : (
           <>

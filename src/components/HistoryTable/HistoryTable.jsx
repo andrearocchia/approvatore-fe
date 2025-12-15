@@ -4,7 +4,14 @@ import { faInfo, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-s
 import NoteModal from '../NoteModal/NoteModal';
 import "./HistoryTable.scss";
 
-function HistoryTable({ invoices, isFiltersActive, onResetFilters, pagination, onPageChange }) {  
+function HistoryTable({ 
+  invoices, 
+  isFiltersActive, 
+  onResetFilters, 
+  pagination, 
+  onPageChange,
+  onPageSizeChange 
+}) {  
   const [noteModal, setNoteModal] = useState({
     isOpen: false,
     note: null,
@@ -26,6 +33,11 @@ function HistoryTable({ invoices, isFiltersActive, onResetFilters, pagination, o
     if (pagination.page < pagination.totalPages) {
       onPageChange(pagination.page + 1);
     }
+  };
+
+  const handlePageSizeSelect = (e) => {
+    const newSize = parseInt(e.target.value, 10);
+    onPageSizeChange(newSize);
   };
 
   const getDataScadenza = (invoice) => {
@@ -95,8 +107,20 @@ function HistoryTable({ invoices, isFiltersActive, onResetFilters, pagination, o
           </table>
         </div>
 
-        {pagination && pagination.totalPages > 1 && (
+        {pagination && pagination.totalPages > 0 && (
           <div className="pagination">
+            <select
+              value={pagination.pageSize} 
+              onChange={handlePageSizeSelect}
+              className="pagination-select"
+            >
+              <option value="10">10 per pagina</option>
+              <option value="15">15 per pagina</option>
+              <option value="25">25 per pagina</option>
+              <option value="50">50 per pagina</option>
+              <option value="100">100 per pagina</option>
+            </select>
+            
             <button 
               onClick={handlePreviousPage} 
               disabled={pagination.page === 1}
@@ -104,9 +128,11 @@ function HistoryTable({ invoices, isFiltersActive, onResetFilters, pagination, o
             >
               <FontAwesomeIcon icon={faChevronLeft} />
             </button>
+            
             <span className="pagination-info">
               Pagina {pagination.page} di {pagination.totalPages} ({pagination.total} fatture)
             </span>
+            
             <button 
               onClick={handleNextPage} 
               disabled={pagination.page === pagination.totalPages}

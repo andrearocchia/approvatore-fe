@@ -76,11 +76,37 @@
       @include flex-center;
       gap: 1rem;
       margin-top: $spacing-md;
-
+      
       .pagination-info {font-size: $font-small;}
 
+      .pagination-select {
+        font-family: $font-family-primary;
+        padding: $padding-xs;
+        border: $border;
+        border-radius: 4px;
+        background-color: $color-bg-white;
+        color: $color-text-primary;
+        font-size: $font-small;
+        cursor: pointer;
+        transition: border-color 0.2s;
+
+        &:hover {
+          border-color: $color-primary;
+        }
+
+        &:focus {
+          outline: none;
+          border-color: $color-primary;
+          box-shadow: $shadow-lg;
+        }
+      }
+      
       .pagination-btn {
         font-size: $font-small;
+        border: none;
+        border-radius: 50%;
+        padding: 10px;
+        cursor: pointer;
         
         &:hover:not(:disabled) { background: $color-primary; }
         &:disabled { background: $color-bg-gray; cursor: not-allowed; }

@@ -1,17 +1,9 @@
 let unauthorizedCallback = null;
 
-/**
- * Permette ad App.jsx di registrare una funzione da chiamare quando il token è invalido
- */
 export function registerUnauthorizedCallback(fn) {
   unauthorizedCallback = fn;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
-
-/**
- * Funzione generica per chiamate API
- */
 export async function apiRequest(endpoint, method = "GET", body = null) {
   const headers = {
     "Content-Type": "application/json",
@@ -28,7 +20,6 @@ export async function apiRequest(endpoint, method = "GET", body = null) {
     body: body ? JSON.stringify(body) : null,
   });
 
-  // Token scaduto / non valido
   if (response.status === 401 || response.status === 403) {
     if (unauthorizedCallback) {
       unauthorizedCallback();
@@ -54,29 +45,45 @@ export function loginRequest(username, password) {
 // ============================
 // INVOICES
 // ============================
+
+// Chiamata per tutte le fatture 'in attesa'
 export function getStandByInvoices(username) {
   return apiRequest(`/invoices/standby/${username}`);
 }
 
+// Chiamata per tutte le fatture
 export function getAllInvoices() {
   return apiRequest("/invoices/all");
 }
 
-export function getProcessedInvoices() {
-  return apiRequest("/invoices/processed");
+// Chiamata con paginazione e filtri
+export function getProcessedInvoices(page = 1, pageSize = 15, filters = {}) {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    pageSize: pageSize.toString(),
+  });
+
+  // Aggiungi filtri solo se presenti
+  if (filters.dataDa) params.append('dataDa', filters.dataDa);
+  if (filters.dataA) params.append('dataA', filters.dataA);
+  if (filters.numeroFattura) params.append('numeroFattura', filters.numeroFattura);
+  if (filters.fornitore) params.append('fornitore', filters.fornitore);
+  if (filters.stato && filters.stato !== 'tutti') params.append('stato', filters.stato);
+
+  return apiRequest(`/invoices/processed?${params.toString()}`);
 }
 
+// Chiamata per ottenere la fattura by id
 export function getInvoiceById(codiceUnico) {
   return apiRequest(`/invoices/${codiceUnico}`);
 }
 
-/**
- * Restituisce l'URL del PDF per aprirlo direttamente
- */
+// Chiamata per ottenere il pdf
 export function getInvoicePdfUrl(codiceUnico) {
   return `/invoices/${codiceUnico}/pdf`;
 }
 
+// Chiamata per ottenere lo stato di una fattura
 export function updateInvoiceStatus(codiceUnico, stato, note) {
   return apiRequest(`/invoices/${codiceUnico}/status`, "PATCH", { stato, note });
 }

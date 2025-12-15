@@ -28,6 +28,8 @@ $color-bg-cancel-light-hover: #d0d0d0;
 $color-border: #ccc;
 $color-border-light: #ddd;
 $color-border-lighter: #eee;
+$border: 1px solid $color-border;
+$border-radius: 0.5rem;
 
 $color-overlay: rgba(0, 0, 0, 0.5);
 $color-overlay-dark: rgba(0, 0, 0, 0.55);
@@ -65,9 +67,6 @@ $padding-sm: 0.8rem;
 $padding: 1rem;
 $padding-md: 1.5rem;
 $padding-lg: 2rem;
-
-// Border Radius
-$border-radius: 0.5rem;
 
 // Shadows
 $shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
