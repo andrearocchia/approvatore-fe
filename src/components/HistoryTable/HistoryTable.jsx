@@ -98,7 +98,7 @@ function HistoryTable({
                     <FontAwesomeIcon
                       icon={faInfo}
                       className="icon-note"
-                      style={{ color: inv.note ? "#007BFF" : "#ccc" }}
+                      style={{ color: inv.note ? "#0b5ed7" : "#ccc" }}
                     />
                   </td>
                 </tr>

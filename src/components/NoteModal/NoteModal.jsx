@@ -6,7 +6,7 @@ export default function NoteModal({ isOpen, onClose, note }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <h3>Note Fattura</h3>
+        <h3>Nota Fattura</h3>
         <div className="note-content">
           {note || "Nessuna nota disponibile"}
         </div>

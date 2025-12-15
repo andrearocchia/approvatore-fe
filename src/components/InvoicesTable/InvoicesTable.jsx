@@ -1,15 +1,26 @@
+import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faTimes, faInfo } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faTimes, faFilePdf,  faInfo } from '@fortawesome/free-solid-svg-icons';
 
+import NoteModal from '../NoteModal/NoteModal';
 import './InvoicesTable.scss';
 
 function InvoicesTable({ invoices, actions, isFiltersActive, onResetFilters }) {
+  const [noteModal, setNoteModal] = useState({
+    isOpen: false,
+    note: ''
+  });
+
   const getDataScadenza = (invoice) => {
     if (!invoice.dettagliPagamento || invoice.dettagliPagamento.length === 0) {
       return '—';
     }
     const primaScadenza = invoice.dettagliPagamento[0].dataScadenzaPagamento;
     return primaScadenza ? new Date(primaScadenza).toLocaleDateString('it-IT') : '—';
+  };
+
+  const handleViewNotes = (note) => {
+    setNoteModal({ isOpen: true, note });
   };
 
   return (
@@ -38,7 +49,7 @@ function InvoicesTable({ invoices, actions, isFiltersActive, onResetFilters }) {
             <tbody>
               {invoices.length === 0 && (
                 <tr>
-                  <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
+                  <td colSpan="7" style={{ textAlign: 'center', padding: '20px' }}>
                     Nessuna fattura in attesa
                   </td>
                 </tr>
@@ -52,7 +63,13 @@ function InvoicesTable({ invoices, actions, isFiltersActive, onResetFilters }) {
                   <td data-label="Data Scadenza:">{getDataScadenza(inv)}</td>
                   <td className="actions-cell">
                     <FontAwesomeIcon
-                      icon={faInfo}
+                      icon={ faInfo}
+                      className={`icon-notes ${inv.noteInInvio ? 'has-notes' : ''}`}
+                      onClick={() => handleViewNotes(inv.noteInInvio || 'Nessuna nota disponibile')}
+                      title={inv.noteInInvio ? 'Visualizza note' : 'Nessuna nota'}
+                    />
+                    <FontAwesomeIcon
+                      icon={faFilePdf}
                       className="icon-info"
                       onClick={() => actions.onViewInfo(inv.id)}
                       title="Visualizza dettagli"
@@ -60,7 +77,7 @@ function InvoicesTable({ invoices, actions, isFiltersActive, onResetFilters }) {
                     <FontAwesomeIcon
                       icon={faCheck}
                       className="icon-approve"
-                      onClick={() =>actions.onApprove(
+                      onClick={() => actions.onApprove(
                         inv.id,
                         inv.numero,
                         inv.cedente?.nome
@@ -80,6 +97,12 @@ function InvoicesTable({ invoices, actions, isFiltersActive, onResetFilters }) {
           </table>
         </div>
       </div>
+
+      <NoteModal
+        isOpen={noteModal.isOpen}
+        onClose={() => setNoteModal({ isOpen: false, note: '' })}
+        note={noteModal.note}
+      />
     </div>
   );
 }
