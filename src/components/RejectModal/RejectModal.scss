@@ -29,7 +29,21 @@
       @include button-base;
 
       &.reject-modal {
-        background-color: $color-danger-light;
+        background: linear-gradient(
+          to right,
+          $color-danger-light,
+          $color-danger-dark
+        );
+
+        @media (min-width: 768px) {
+          &:hover {
+            background: linear-gradient(
+            to right,
+            $color-danger-dark,
+            $color-danger-light
+          );
+          }
+        }
 
         &:disabled {
           opacity: 0.5;

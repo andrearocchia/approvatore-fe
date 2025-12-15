@@ -52,41 +52,73 @@
         }
 
         .app-logout {
-          background: $color-danger-light;
+          background: linear-gradient(
+            to right,
+            $color-danger-light,
+            $color-danger-dark
+          );
 
           @media (min-width: 768px) {
             &:hover {
-              background-color: $color-danger-hover;
+              background: linear-gradient(
+              to right,
+              $color-danger-dark,
+              $color-danger-light
+            );
             }
           }
         }
 
         .back-button {
-          background-color: $color-secondary;
+          background: linear-gradient(
+            to right,
+            $color-secondary-light,
+            $color-secondary-dark
+          );
 
           @media (min-width: 768px) {
             &:hover {
-              background-color: $color-secondary-hover;
+              background: linear-gradient(
+              to right,
+              $color-secondary-dark,
+              $color-secondary-light
+            );
             }
           }
         }
 
         .invoice-history {
-          background-color: $color-primary;
+          background: linear-gradient(
+            to right,
+            $color-primary-light,
+            $color-primary-dark
+          );
 
           @media (min-width: 768px) {
             &:hover {
-              background-color: $color-primary-hover;
+              background: linear-gradient(
+                to right,
+                $color-primary-dark,
+                $color-primary-light
+              );
             }
           }
         }
 
         .filter-button {
-          background-color: $color-alert;
+          background: linear-gradient(
+            to right,
+            $color-alert-light,
+            $color-alert-dark
+          );
 
           @media (min-width: 768px) {
             &:hover {
-              background-color: $color-alert-hover;
+              background: linear-gradient(
+              to right,
+              $color-alert-dark,
+              $color-alert-light
+            );
             }
           }
         }

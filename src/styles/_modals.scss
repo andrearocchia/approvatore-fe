@@ -42,11 +42,19 @@
     // Bottoni dei modali
     .btn-cancel {
       @include button-base;
-      background: $color-bg-cancel-light;
       color: $color-text-primary;
+      background: linear-gradient(
+        to right,
+        $color-bg-cancel-light,
+        $color-bg-cancel
+      );
 
       &:hover {
-        background: $color-bg-cancel-light-hover;
+        background: linear-gradient(
+          to right,
+          $color-bg-cancel,
+          $color-bg-cancel-light
+        );
       }
     }
 

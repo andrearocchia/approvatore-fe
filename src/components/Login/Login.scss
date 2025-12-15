@@ -25,7 +25,7 @@
       color: $color-primary;
       text-align: center;
       margin-bottom: $spacing-md;
-      font-size: 22px;
+      font-size: $font-big;
 
       .icon-user {
         margin-right: $spacing-sm;
@@ -47,13 +47,21 @@
     .login-button {
       margin: 0 25%;
       padding: $padding-sm;
-      background: $color-primary;
       border: none;
       border-radius: $border-radius;
       cursor: pointer;
+      background: linear-gradient(
+        to right,
+        $color-primary-light,
+        $color-primary-dark
+      );
 
       &:hover {
-        background: $color-primary-hover;
+        background: linear-gradient(
+          to right,
+          $color-primary-dark,
+          $color-primary-light
+        );
       }
     }
   }

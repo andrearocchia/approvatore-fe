@@ -12,15 +12,23 @@
           tbody {
             tr {
               &.row-status-approvato {
-                border-color: $color-success;
-                background-color: rgba($color-success, 0.075);
+                border-color: $color-secondary;
+                background: linear-gradient(
+                  to right,
+                  rgba($color-secondary-light, 0.15),
+                  rgba($color-secondary-dark, 0.15)
+                );
 
                 @media (min-width: 768px) { border-color: #ccc; }
               }
 
               &.row-status-rifiutato {
-                border-color: $color-danger;
-                background-color: rgba($color-danger, 0.075);
+                border-color: $color-alert;
+                background: linear-gradient(
+                  to right,
+                  rgba($color-alert-light, 0.15),
+                  rgba($color-alert-dark, 0.15)
+                );
 
                 // Tablet/desktop
                 @media (min-width: 768px) { border-color: #ccc; }

@@ -14,10 +14,18 @@
   @include button-base;
 
   &.confirm-modal {
-    background: $color-success;
+    background: linear-gradient(
+      to right,
+      $color-secondary-light,
+      $color-secondary-dark
+    );
 
     &:hover {
-      background: $color-success-hover;
+      background: linear-gradient(
+        to right,
+        $color-secondary-dark,
+        $color-secondary-light
+      );
     }
   }
 }

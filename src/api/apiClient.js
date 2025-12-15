@@ -1,5 +1,6 @@
 let unauthorizedCallback = null;
 
+// Permette ad App.jsx di registrare una funzione da chiamare quando il token è invalido
 export function registerUnauthorizedCallback(fn) {
   unauthorizedCallback = fn;
 }

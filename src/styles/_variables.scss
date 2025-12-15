@@ -1,59 +1,96 @@
-// Colors
-$color-primary: #0057d8;
-$color-primary-hover: #0047b0;
-$color-secondary: #87c95b;
-$color-secondary-hover: #4caf50;
-$color-success: #28a745;
-$color-success-hover: #218838;
-$color-alert: #dc8035;
-$color-alert-hover: #c7732e;
+// ======================
+// COLORS
+// ======================
+$color-primary: #0b5ed7;
+$color-primary-hover: #0a53be;
+$color-primary-light: #3d7bfd;
+$color-primary-dark: #084298;
+
+$color-secondary: #6fbf3d;
+$color-secondary-hover: #5aa832;
+$color-secondary-light: #8ddf5a;
+$color-secondary-dark: #4b8f28;
+
+$color-success: #2ea44f;
+$color-success-hover: #24863f;
+
+$color-alert: #e07a2f;
+$color-alert-hover: #c96a28;
+$color-alert-light: #ff9a47;
+$color-alert-dark: #c76921;
+
 $color-danger: #dc3545;
-$color-danger-hover: #c82333;
-$color-danger-light: #e54646;
-$color-info: #0066cc;
-$color-info-hover: #0052a3;
+$color-danger-hover: #bb2d3b;
+$color-danger-light: #e85d68;
+$color-danger-dark: #a61e2b;
 
-$color-text-primary: #333;
-$color-text-secondary: #555;
-$color-text-muted: #666;
-$color-text-light: #8b8b8b;
+$color-info: #0d6efd;
+$color-info-hover: #0b5ed7;
 
+// ======================
+// TEXT COLORS
+// ======================
+$color-text-primary: #212529;
+$color-text-secondary: #495057;
+$color-text-muted: #6c757d;
+$color-text-light: #adb5bd;
+
+// ======================
+// BACKGROUNDS
+// ======================
 $color-bg-white: #ffffff;
-$color-bg-light: #f9f9f9;
-$color-bg-gray: #f0f0f0;
-$color-bg-cancel: #888;
-$color-bg-cancel-light: #e0e0e0;
-$color-bg-cancel-light-hover: #d0d0d0;
+$color-bg-light: #f8f9fa;
+$color-bg-gray: #e9ecef;
 
-$color-border: #ccc;
-$color-border-light: #ddd;
-$color-border-lighter: #eee;
+$color-bg-cancel: #c7c8ca;
+$color-bg-cancel-light: #dee2e6;
+$color-bg-cancel-light-hover: #ced4da;
+$color-bg-cancel-dark: #868e96;
+
+// ======================
+// BORDERS
+// ======================
+$color-border: #ced4da;
+$color-border-light: #dee2e6;
+$color-border-lighter: #f1f3f5;
+
 $border: 1px solid $color-border;
 $border-radius: 0.5rem;
 
-$color-overlay: rgba(0, 0, 0, 0.5);
-$color-overlay-dark: rgba(0, 0, 0, 0.55);
+// ======================
+// OVERLAYS
+// ======================
+$color-overlay: rgba(0, 0, 0, 0.45);
+$color-overlay-dark: rgba(0, 0, 0, 0.6);
 
-// Typography
+// ======================
+// TYPOGRAPHY
+// ======================
 $font-family-primary: 'Montserrat', Arial, sans-serif;
 $font-family-system: system-ui, 'Montserrat', Avenir, Helvetica, Arial, sans-serif;
 
-
 $font-size: 16px;
 $font-title: 18px;
-$font-medium: 14px;
 $font-small: 12px;
+$font-medium: 14px;
+$font-big: 22px;
+
 $font-weight: 600;
 $font-weight-sm: 500;
 $font-weight-xs: 400;
 
-// Spacing
+// ======================
+// SPACING
+// ======================
 $spacing-xs: 0.5rem;
 $spacing-sm: 0.75rem;
 $spacing-md: 1rem;
 $spacing-lg: 1.5rem;
 $spacing-xl: 2rem;
 
+// ======================
+// WIDTHS
+// ======================
 $width-100: 100%;
 $width-95: 95%;
 $width-90: 90%;
@@ -61,18 +98,24 @@ $width-80: 80%;
 $width-70: 70%;
 $width-50: 50%;
 
-// Padding
+// ======================
+// PADDING
+// ======================
 $padding-xs: 0.5rem;
 $padding-sm: 0.8rem;
 $padding: 1rem;
 $padding-md: 1.5rem;
 $padding-lg: 2rem;
 
-// Shadows
-$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+// ======================
+// SHADOWS
+// ======================
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
 $shadow-md: 0 4px 6px rgba(0, 0, 0, 0.25);
-$shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.4);
+$shadow-lg: 0 6px 16px rgba(0, 0, 0, 0.35);
 
-// Transitions
+// ======================
+// TRANSITIONS
+// ======================
 $transition-fast: 0.2s ease;
-$transition-normal: 0.25s;
+$transition-normal: 0.25s ease;

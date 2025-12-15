@@ -94,11 +94,19 @@
     color: $color-text-primary;
 
     .btn-apply {
-      background: $color-success;
       color: $color-bg-white;
+      background: linear-gradient(
+        to right,
+        $color-secondary-light,
+        $color-secondary-dark
+      );
 
       &:hover {
-        background: $color-success-hover;
+        background: linear-gradient(
+          to right,
+          $color-secondary-dark,
+          $color-secondary-light
+        );
       }
     }
   }

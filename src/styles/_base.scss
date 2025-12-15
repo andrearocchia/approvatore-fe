@@ -41,9 +41,13 @@ button {
   padding: 0.5rem 1rem;
   border: none;
   font-family: inherit;
-  background-color: $color-primary;
   cursor: pointer;
   transition: border-color $transition-normal;
+  background: linear-gradient(
+    to right,
+    $color-primary-light,
+    $color-primary-dark
+  );
 
   &:hover {
     border-color: $color-primary-hover;

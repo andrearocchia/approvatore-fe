@@ -25,9 +25,13 @@
         transform: translateX(10px);
         transition: all 0.3s ease;
         margin-left: -5rem;
-        background-color: $color-bg-gray;
-        color: $color-text-secondary;
+        color: $color-bg-white;
         cursor: pointer;
+        background: linear-gradient(
+          to right,
+          $color-bg-cancel-light,
+          $color-bg-cancel
+        );
 
         &.visible {
           opacity: 1;
@@ -37,8 +41,11 @@
         }
 
         &:hover {
-          background-color: $color-bg-cancel;
-          color: $color-bg-white;
+          background: linear-gradient(
+            to right,
+            $color-bg-cancel,
+            $color-bg-cancel-light
+          );
         }
       }
     }
