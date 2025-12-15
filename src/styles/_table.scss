@@ -11,7 +11,7 @@
     .table-header {
       @include flex;
       align-items: center;
-      margin-bottom: $spacing-lg;
+      margin-bottom: $spacing-md;
 
       .table-title {
         font-size: $font-title;
