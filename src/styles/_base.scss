@@ -6,11 +6,6 @@
   font-family: $font-family-system;
   font-weight: $font-weight-xs;
   width: $width-90;
-  color-scheme: light dark;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -42,6 +37,7 @@ button {
   border: none;
   font-family: inherit;
   cursor: pointer;
+  color: $color-bg-white;
   transition: border-color $transition-normal;
   background: linear-gradient(
     to right,
@@ -56,20 +52,5 @@ button {
   &:focus, &:active,
   &:focus-visible {
     outline: 0;
-  }
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: $color-bg-white;
-  }
-
-  a:hover {
-    color: #747bff;
-  }
-
-  button {
-    background-color: $color-bg-light;
   }
 }
